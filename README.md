@@ -18,6 +18,7 @@ Project using Node with Postgresql.
 
 ## :rocket: Technologies ##
 
+- [Javascript]
 - [Node]
 - [Postgresql]
 
