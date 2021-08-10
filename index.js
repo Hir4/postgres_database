@@ -1,14 +1,22 @@
 const {Client} = require('pg');
 
+///////////////////////////////////////////////////////
+// CONFIG DATABASE
+//////////////////////////////////////////////////////
+
 const client = new Client({
   user: "postgres",
-  password: "*Hideki2021",
+  password: "",
   host: "localhost",
   port: 5432,
   database: "postgres"
 });
 
-let querySelect = "SELECT * FROM public.clients;";
+let querySelect = "SELECT * FROM public.employee;";
+
+///////////////////////////////////////////////////////
+// INSERT NEW EMPLOYEE
+//////////////////////////////////////////////////////
 
 let queryInsert = `
   INSERT INTO public.employee
@@ -42,9 +50,29 @@ let queryInsertEmployeeValue = ['luka@gmail.com','123','Luka','Maia','1111111111
 
 console.log(querySelect);
 
+///////////////////////////////////////////////////////
+// SOFT DELETE EMPLOYEE
+//////////////////////////////////////////////////////
+
+let querySoftDelete = `
+  UPDATE public.employee
+  SET
+    update_date = $1,
+    delete_date = $2 
+  WHERE
+    public.employee.id = 2`;
+
+let querySoftDeleteEmployeeValue = ['NOW()', 'NOW()'];
+
+console.log(querySoftDelete);
+
+///////////////////////////////////////////////////////
+// CONNECTING TO THE DATABASE
+//////////////////////////////////////////////////////
+
 client.connect()
 .then(() => console.log("Connected"))
-.then(() => client.query(queryInsert, queryInsertEmployeeValue))
+.then(() => client.query(querySoftDelete, querySoftDeleteEmployeeValue))
 .then(results => console.table(results.rows))
 .catch(e => console.log(e))
 .finally(() => client.end())
