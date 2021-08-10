@@ -3,9 +3,9 @@
 ------------------------------------------------------------------------
 
 INSERT INTO public.clients
-	(email, password, first_name, last_name, document, address, city, state, zip_code, phone_ddi, phone_ddd, phone_number)
+	(email, password, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number)
 VALUES
-	('hirayama.rafael517@gmail.com', '123', 'Rafael', 'Hideki', '47584967817', 'Pq. Industrial', 'SJC', 'SP', '12235690', '55', '12', '996384346')
+	('hirayama.rafael517@gmail.com', '123', 'Rafael', 'Hideki', '11111111111', 'Terras Urbana', 'SJC', 'SP', '11111111', '11', '111111111')
 	
 SELECT * FROM public.clients
 
@@ -16,9 +16,9 @@ TRUNCATE TABLE public.clients CASCADE
 ------------------------------------------------------------------------
 
 INSERT INTO public.admin
-	(email, password, first_name, last_name, document, address, city, state, zip_code, phone_ddi, phone_ddd, phone_number)
+	(email, password, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number)
 VALUES
-	('hirayama.rafael517@gmail.com', '123', 'Rafael', 'Hideki', '47584967817', 'Pq. Industrial', 'SJC', 'SP', '12235690', '55', '12', '996384346')
+	('hirayama.rafael517@gmail.com', '123', 'Rafael', 'Hideki', '11111111', 'Terras Urbana', 'SJC', 'SP', '11111111', '11', '111111111')
 	
 SELECT * FROM public.admin
 
@@ -29,9 +29,9 @@ TRUNCATE TABLE public.admin
 ------------------------------------------------------------------------
 
 INSERT INTO public.employee
-	(email, password, first_name, last_name, document, address, city, state, zip_code, phone_ddi, phone_ddd, phone_number)
+	(email, password, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number)
 VALUES
-	('hirayama.rafael517@gmail.com', '123', 'Rafael', 'Hideki', '47584967817', 'Pq. Industrial', 'SJC', 'SP', '12235690', '55', '12', '996384346')
+	('hirayama.rafael517@gmail.com', '123', 'Rafael', 'Hideki', '11111111', 'Terras Urbana', 'SJC', 'SP', '11111111', '11', '111111111')
 	
 SELECT * FROM public.employee
 
@@ -68,9 +68,9 @@ TRUNCATE TABLE public.products CASCADE
 ------------------------------------------------------------------------
 
 INSERT INTO public.provider
-	(company, first_name, last_name, document, address, city, state, zip_code, phone_ddi, phone_ddd, phone_number)
+	(company, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number)
 VALUES
-	('Intel', 'Fábio', 'Andrade', '11111111111', '2200 Mission College Blvd', 'Santa Clara', 'CA', '111111111', '111', '11', '111111111')
+	('Intel', 'Fábio', 'Andrade', '11111111111', '2200 Mission College Blvd', 'Santa Clara', 'CA', '111111111', '11', '111111111')
 	
 SELECT * FROM public.provider
 
