@@ -14,6 +14,8 @@ const client = new Client({
 
 let querySelect = "SELECT * FROM public.employee;";
 
+console.log(querySelect);
+
 ///////////////////////////////////////////////////////
 // INSERT NEW EMPLOYEE
 //////////////////////////////////////////////////////
@@ -48,7 +50,7 @@ let queryInsert = `
 
 let queryInsertEmployeeValue = ['luka@gmail.com','123','Luka','Maia','11111111111','Pq. Aquático','São Sebastião','SP','11111111','11','111111111', 'NOW()'];
 
-console.log(querySelect);
+console.log(queryInsert);
 
 ///////////////////////////////////////////////////////
 // SOFT DELETE EMPLOYEE
@@ -67,12 +69,28 @@ let querySoftDeleteEmployeeValue = ['NOW()', 'NOW()'];
 console.log(querySoftDelete);
 
 ///////////////////////////////////////////////////////
+// UPDATE EMPLOYEE
+//////////////////////////////////////////////////////
+
+let queryUpdateEmployee = `
+  UPDATE public.employee
+  SET
+    password = $1,
+    update_date = $2 
+  WHERE
+    public.employee.id = 1`;
+
+let queryUpdateEmployeeValue = ['123456', 'NOW()'];
+
+console.log(queryUpdateEmployee);
+
+///////////////////////////////////////////////////////
 // CONNECTING TO THE DATABASE
 //////////////////////////////////////////////////////
 
 client.connect()
 .then(() => console.log("Connected"))
-.then(() => client.query(querySoftDelete, querySoftDeleteEmployeeValue))
+.then(() => client.query(querySelect))
 .then(results => console.table(results.rows))
 .catch(e => console.log(e))
 .finally(() => client.end())
