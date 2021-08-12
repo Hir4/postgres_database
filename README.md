@@ -38,3 +38,11 @@ npm install express --save
 ```bash
 npm install body-parser
 ```
+- [cookie-parser]
+```bash
+npm install cookie-parser
+```
+- [bcrypt]
+```bash
+npm install bcrypt
+```
