@@ -42,3 +42,7 @@ npm install body-parser
 ```bash
 npm install cookie-parser
 ```
+- [bcrypt]
+```bash
+npm install bcrypt
+```
