@@ -1,5 +1,7 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
+var jsonParser = bodyParser.json();
 
 const {Client} = require('pg');
 
@@ -9,96 +11,50 @@ const {Client} = require('pg');
 
 const client = new Client({
   user: "postgres",
-  password: "",
+  password: "*Hideki2021",
   host: "localhost",
   port: 5432,
   database: "postgres"
 });
 
-let querySelect = "SELECT * FROM public.employee ORDER BY public.employee.id;";
-
-console.log(querySelect);
-
 ///////////////////////////////////////////////////////
-// INSERT NEW EMPLOYEE
+// GET METHOD TO FIND THE USER AND COMPARE WITH THE LOG IN
 //////////////////////////////////////////////////////
 
-let queryInsert = `
-  INSERT INTO public.employee
-    (email, 
-     password, 
-     first_name, 
-     last_name, 
-     document, 
-     address, 
-     city, 
-     state, 
-     zip_code, 
-     phone_ddd, 
-     phone_number, 
-     creation_date)
-  VALUES
-    ($1,
-     $2,
-     $3,
-     $4,
-     $5,
-     $6,
-     $7,
-     $8,
-     $9,
-     $10,
-     $11,
-     $12); `;
+app.post('/login', jsonParser, async function(req, res) {
+  let email = req.body.email;
+  let password = req.body.password;
 
-let queryInsertEmployeeValue = ['arthur@gmail.com','123','Arthur','Oliveira','11111111111','União','SJC','SP','11111111','11','111111111', 'NOW()'];
+  let querySelect = `
+  SELECT 
+	  email, 
+    password
+  FROM 
+	  public.clients 
+  WHERE 
+	  email = $1  
+	  AND password = $2;`;
 
-console.log(queryInsert);
+  console.log(querySelect);
 
-///////////////////////////////////////////////////////
-// SOFT DELETE EMPLOYEE
-//////////////////////////////////////////////////////
+  let querySelectUser = [`${email}`, `${password}`]
+  
+  console.log(querySelectUser);
 
-let querySoftDelete = `
-  UPDATE public.employee
-  SET
-    update_date = $1,
-    delete_date = $2 
-  WHERE
-    public.employee.id = 3`;
-
-let querySoftDeleteEmployeeValue = ['NOW()', 'NOW()'];
-
-console.log(querySoftDelete);
-
-///////////////////////////////////////////////////////
-// UPDATE EMPLOYEE
-//////////////////////////////////////////////////////
-
-let queryUpdateEmployee = `
-  UPDATE public.employee
-  SET
-    password = $1,
-    update_date = $2 
-  WHERE
-    public.employee.id = 3`;
-
-let queryUpdateEmployeeValue = ['123456', 'NOW()'];
-
-console.log(queryUpdateEmployee);
-
-///////////////////////////////////////////////////////
-// CONNECTING TO THE DATABASE
-//////////////////////////////////////////////////////
-
-app.get('/getusers', function(req, res) {
-  client.connect()
+  client.connect() // CONNECTING TO THE DATABASE
     .then(() => console.log("Connected"))
-    .then(() => client.query(querySelect))
-    .then(results => console.table(results.rows))
+    .then(() => client.query(querySelect, querySelectUser))
+    .then(function LoginConfirmation(results){
+      if(results.rowCount = 1){
+        res.send("Connected");
+      } else {
+        res.send("Login not found");
+      };
+      console.log(results.rows);
+    }) 
+      // console.table(results.rows))
     .catch(e => console.log(e))
     .finally(() => client.end())
-  res.send("Users table sent");
 });
 
 app.listen(8080);

@@ -1,3 +1,9 @@
 ###
-GET http://localhost:8080/getusers
+POST http://localhost:8080/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "thiago@gmail.com",
+    "password": "123"
+}
 ###
