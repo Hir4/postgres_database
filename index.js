@@ -11,7 +11,7 @@ const {Client} = require('pg');
 
 const client = new Client({
   user: "postgres",
-  password: "*Hideki2021",
+  password: "",
   host: "localhost",
   port: 5432,
   database: "postgres"
@@ -35,14 +35,9 @@ app.post('/login', jsonParser, async function(req, res) {
 	  email = $1  
 	  AND password = $2;`;
 
-  console.log(querySelect);
-
   let querySelectUser = [`${email}`, `${password}`]
-  
-  console.log(querySelectUser);
 
   client.connect() // CONNECTING TO THE DATABASE
-    .then(() => console.log("Connected"))
     .then(() => client.query(querySelect, querySelectUser))
     .then(function LoginConfirmation(results){
       if(results.rowCount = 1){
@@ -50,9 +45,7 @@ app.post('/login', jsonParser, async function(req, res) {
       } else {
         res.send("Login not found");
       };
-      console.log(results.rows);
     }) 
-      // console.table(results.rows))
     .catch(e => console.log(e))
     .finally(() => client.end())
 });
