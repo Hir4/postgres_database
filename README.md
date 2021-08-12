@@ -34,3 +34,7 @@ npm install pg
 ```bash
 npm install express --save
 ```
+- [body-parser]
+```bash
+npm install body-parser
+```
