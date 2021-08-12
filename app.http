@@ -3,7 +3,27 @@ POST http://localhost:8080/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "thiago@gmail.com",
+    "email": "donatao@gmail.com",
     "password": "123"
+}
+###
+
+###
+POST http://localhost:8080/signin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "donatao@gmail.com",
+    "password": "123",
+    "first_name": "Lucca",
+    "last_name": "Donatao",
+    "document": "11111111111",
+    "address": "Vila Branca",
+    "city": "Jacareí",
+    "state": "SP",
+    "zip_code": "11111111",
+    "phone_ddd": "12",
+    "phone_number": "111111111",
+    "creation_date": "NOW()"
 }
 ###
