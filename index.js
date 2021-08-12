@@ -1,3 +1,6 @@
+var express = require('express');
+var app = express();
+
 const {Client} = require('pg');
 
 ///////////////////////////////////////////////////////
@@ -12,7 +15,7 @@ const client = new Client({
   database: "postgres"
 });
 
-let querySelect = "SELECT * FROM public.employee;";
+let querySelect = "SELECT * FROM public.employee ORDER BY public.employee.id;";
 
 console.log(querySelect);
 
@@ -48,7 +51,7 @@ let queryInsert = `
      $11,
      $12); `;
 
-let queryInsertEmployeeValue = ['luka@gmail.com','123','Luka','Maia','11111111111','Pq. Aquático','São Sebastião','SP','11111111','11','111111111', 'NOW()'];
+let queryInsertEmployeeValue = ['arthur@gmail.com','123','Arthur','Oliveira','11111111111','União','SJC','SP','11111111','11','111111111', 'NOW()'];
 
 console.log(queryInsert);
 
@@ -62,7 +65,7 @@ let querySoftDelete = `
     update_date = $1,
     delete_date = $2 
   WHERE
-    public.employee.id = 2`;
+    public.employee.id = 3`;
 
 let querySoftDeleteEmployeeValue = ['NOW()', 'NOW()'];
 
@@ -78,7 +81,7 @@ let queryUpdateEmployee = `
     password = $1,
     update_date = $2 
   WHERE
-    public.employee.id = 1`;
+    public.employee.id = 3`;
 
 let queryUpdateEmployeeValue = ['123456', 'NOW()'];
 
@@ -88,9 +91,14 @@ console.log(queryUpdateEmployee);
 // CONNECTING TO THE DATABASE
 //////////////////////////////////////////////////////
 
-client.connect()
-.then(() => console.log("Connected"))
-.then(() => client.query(querySelect))
-.then(results => console.table(results.rows))
-.catch(e => console.log(e))
-.finally(() => client.end())
+app.get('/getusers', function(req, res) {
+  client.connect()
+    .then(() => console.log("Connected"))
+    .then(() => client.query(querySelect))
+    .then(results => console.table(results.rows))
+    .catch(e => console.log(e))
+    .finally(() => client.end())
+  res.send("Users table sent");
+});
+
+app.listen(8080);
