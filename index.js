@@ -117,19 +117,53 @@ app.post('/signin', jsonParser, function(req, res) {
   bcrypt.hash(password, saltRounds, function cryptoPassword(err, hash) { // CRYPTOGRAPHY THE PASSWORD
     const queryInsertClientValue = [`${email}`, `${hash}`, `${first_name}`, `${last_name}`, `${document}`, `${address}`, `${city}`, `${state}`, `${zip_code}`, `${phone_ddd}`, `${phone_number}`, `${creation_date}`, `${email}`];
 
+    client.connect() // CONNECTING TO THE DATABASE
+      .then(() => client.query(queryInsertClient, queryInsertClientValue)) // SEND THE QUERY TO THE DATABASE
+      .then(function SignInUser(results){ 
+        if(results.rowCount === 1){ // CHECK IF THE NEW USER WAS SIGNED
+          res.send("User signed with success")
+        } else {
+          res.send("User already signed")
+        }
+      }) 
+      .catch(e => console.log(e))
+      .finally(() => client.end())
+
+  });
+});
+
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO CREATE PRODUCT'S GROUP 
+//////////////////////////////////////////////////////////
+
+app.post('/productgroup', jsonParser, function(req, res) {
+  const product_type = req.body.product_type;
+  const creation_date = req.body.creation_date;
+
+  const queryInsertGroup = `
+  INSERT INTO public.product_group( 
+    product_type, 
+    creation_date)
+  SELECT
+    $1, $2
+  WHERE NOT EXISTS (
+  SELECT * FROM public.product_group WHERE product_type = $3
+  );`;
+    
+  const queryInsertGroupValue = [`${product_type}`, `${creation_date}`, `${product_type}`];
+
   client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryInsertClient, queryInsertClientValue)) // SEND THE QUERY TO THE DATABASE
+    .then(() => client.query(queryInsertGroup, queryInsertGroupValue)) // SEND THE QUERY TO THE DATABASE
     .then(function SignInUser(results){ 
-      if(results.rowCount === 1){ // CHECK IF THE NEW USER WAS SIGNED
-        res.send("User signed with success")
+      if(results.rowCount === 1){ // CHECK IF THE NEW GROUP WAS SIGNED
+        res.send("Group signed with success")
       } else {
-        res.send("User already signed")
+        res.send("Group already signed")
       }
     }) 
     .catch(e => console.log(e))
     .finally(() => client.end())
-
-  });
 });
 
 app.listen(8080);
