@@ -37,3 +37,17 @@ Content-Type: application/json
     "creation_date": "NOW()"
 }
 ###
+
+###
+POST http://localhost:8080/product HTTP/1.1
+Content-Type: application/json
+
+{
+    "group_id": "3",
+    "label": "Kingston",
+    "product_name": "Fury Beast - 16GB - DDR4",
+    "product_quantity": "5",
+    "product_price": "849,90",
+    "creation_date": "NOW()"
+}
+###

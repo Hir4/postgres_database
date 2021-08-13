@@ -111,7 +111,7 @@ app.post('/signin', jsonParser, function(req, res) {
   SELECT
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
   WHERE NOT EXISTS (
-  SELECT * FROM public.clients WHERE email = $13
+  SELECT 1 FROM public.clients WHERE email = $13
   );`;
     
   bcrypt.hash(password, saltRounds, function cryptoPassword(err, hash) { // CRYPTOGRAPHY THE PASSWORD
@@ -148,19 +148,63 @@ app.post('/productgroup', jsonParser, function(req, res) {
   SELECT
     $1, $2
   WHERE NOT EXISTS (
-  SELECT * FROM public.product_group WHERE product_type = $3
+  SELECT 1 FROM public.product_group WHERE product_type = $3
   );`;
     
   const queryInsertGroupValue = [`${product_type}`, `${creation_date}`, `${product_type}`];
 
   client.connect() // CONNECTING TO THE DATABASE
     .then(() => client.query(queryInsertGroup, queryInsertGroupValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
+    .then(function SignInUser(results){
       if(results.rowCount === 1){ // CHECK IF THE NEW GROUP WAS SIGNED
         res.send("Group signed with success")
       } else {
         res.send("Group already signed")
       }
+    }) 
+    .catch(e => console.log(e))
+    .finally(() => client.end())
+});
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO CREATE PRODUCT 
+//////////////////////////////////////////////////////////
+
+app.post('/product', jsonParser, function(req, res) {
+  const group_id = req.body.group_id;
+  const label = req.body.label;
+  const product_name = req.body.product_name;
+  const product_quantity = req.body.product_quantity;
+  const product_price = req.body.product_price;
+  const creation_date = req.body.creation_date;
+
+  const queryInsertProduct = `
+  INSERT INTO public.products( 
+    group_id, 
+    label,
+    product_name,
+    product_quantity,
+    product_price,
+    creation_date)
+  SELECT
+    $1, $2, $3, $4, $5, $6
+  WHERE EXISTS (
+  SELECT 1 FROM public.product_group WHERE id = $7
+  )
+  AND NOT EXISTS (
+    SELECT 1 FROM public.products WHERE product_name = $8
+  );`;
+    
+  const queryInsertProductValue = [`${group_id}`, `${label}`, `${product_name}`, `${product_quantity}`, `${product_price}`, `${creation_date}`, `${group_id}`, `${product_name}`];
+
+  client.connect() // CONNECTING TO THE DATABASE
+    .then(() => client.query(queryInsertProduct, queryInsertProductValue)) // SEND THE QUERY TO THE DATABASE
+    .then(function SignInUser(results){ 
+        if(results.rowCount === 1){ // CHECK IF THE NEW PRODUCT WAS SIGNED
+          res.send("Product signed with success")
+        } else {
+          res.send("Product already signed")
+        }
     }) 
     .catch(e => console.log(e))
     .finally(() => client.end())
