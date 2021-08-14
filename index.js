@@ -247,4 +247,38 @@ app.post('/productupdate', jsonParser, function(req, res) {
     .finally(() => client.end())
 });
 
+///////////////////////////////////////////////////////////
+// POST METHOD TO DELETE PRODUCT 
+//////////////////////////////////////////////////////////
+
+app.post('/productdelete', jsonParser, function(req, res) {
+  const product_id = req.body.product_id; 
+  const delete_date = req.body.delete_date;
+  const update_date = req.body.update_date;
+
+  const queryDeleteProduct = `
+  UPDATE public.products
+  SET
+    update_date = $1,
+    delete_date = $2
+  WHERE 
+    id = $3
+  `;
+    
+  const queryDeleteProductValue = [`${update_date}`, `${delete_date}`, `${product_id}`];
+
+  client.connect() // CONNECTING TO THE DATABASE
+    .then(() => client.query(queryDeleteProduct, queryDeleteProductValue)) // SEND THE QUERY TO THE DATABASE
+    .then(function SignInUser(results){ 
+        console.log(results);
+        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS UPDATED
+          res.send("Product deleted with success")
+        } else {
+          res.send("Product delete failed")
+        }
+    }) 
+    .catch(e => console.log(e))
+    .finally(() => client.end())
+});
+
 app.listen(8080);

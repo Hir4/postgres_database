@@ -62,3 +62,14 @@ Content-Type: application/json
     "update_date": "NOW()"
 }
 ###
+
+###
+POST http://localhost:8080/productdelete HTTP/1.1
+Content-Type: application/json
+
+{
+    "product_id": "4",
+    "delete_date": "NOW()",
+    "update_date": "NOW()"
+}
+###
