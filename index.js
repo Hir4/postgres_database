@@ -167,6 +167,42 @@ app.post('/productgroup', jsonParser, function(req, res) {
 });
 
 ///////////////////////////////////////////////////////////
+// POST METHOD TO UPDATE PRODUCT'S GROUP
+//////////////////////////////////////////////////////////
+
+app.post('/productgroupupdate', jsonParser, function(req, res) {
+  const product_id = req.body.product_id; 
+  const product_type = req.body.product_type;
+  const update_date = req.body.update_date;
+
+  const queryUpdateProduct = `
+  UPDATE public.product_group
+  SET
+    product_type = $1,
+    update_date = $2
+  WHERE 
+    id = $3 
+  AND 
+    delete_date::timestamp is  null
+  `;
+    
+  const queryUpdateProductValue = [`${product_type}`, `${update_date}`, `${product_id}`];
+
+  client.connect() // CONNECTING TO THE DATABASE
+    .then(() => client.query(queryUpdateProduct, queryUpdateProductValue)) // SEND THE QUERY TO THE DATABASE
+    .then(function SignInUser(results){ 
+        console.log(results);
+        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS UPDATED
+          res.send("Product's group updated with success")
+        } else {
+          res.send("Product's group update failed")
+        }
+    }) 
+    .catch(e => console.log(e))
+    .finally(() => client.end())
+});
+
+///////////////////////////////////////////////////////////
 // POST METHOD TO CREATE PRODUCT 
 //////////////////////////////////////////////////////////
 
