@@ -210,4 +210,41 @@ app.post('/product', jsonParser, function(req, res) {
     .finally(() => client.end())
 });
 
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO UPDATE PRODUCT 
+//////////////////////////////////////////////////////////
+
+app.post('/productupdate', jsonParser, function(req, res) {
+  const product_id = req.body.product_id; 
+  const product_quantity = req.body.product_quantity; // THE ROW YOU WANT TO CHANGE
+  const update_date = req.body.update_date;
+
+  const queryUpdateProduct = `
+  UPDATE public.products
+  SET
+    product_quantity = $1,
+    update_date = $2
+  WHERE 
+    id = $3 
+  AND 
+    delete_date::timestamp is  null
+  `;
+    
+  const queryUpdateProductValue = [`${product_quantity}`, `${update_date}`, `${product_id}`];
+
+  client.connect() // CONNECTING TO THE DATABASE
+    .then(() => client.query(queryUpdateProduct, queryUpdateProductValue)) // SEND THE QUERY TO THE DATABASE
+    .then(function SignInUser(results){ 
+        console.log(results);
+        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS UPDATED
+          res.send("Product updated with success")
+        } else {
+          res.send("Product update failed")
+        }
+    }) 
+    .catch(e => console.log(e))
+    .finally(() => client.end())
+});
+
 app.listen(8080);
