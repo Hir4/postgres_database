@@ -134,6 +134,44 @@ app.post('/signin', jsonParser, function(req, res) {
 
 
 ///////////////////////////////////////////////////////////
+// POST METHOD TO UPDATE USER
+//////////////////////////////////////////////////////////
+
+app.post('/userupdate', jsonParser, function(req, res) {
+  const user_id = req.body.user_id; 
+  const address = req.body.address;
+  const update_date = req.body.update_date;
+
+  const queryUpdateUser = `
+  UPDATE public.clients
+  SET
+    address = $1,
+    update_date = $2
+  WHERE 
+    id = $3 
+  AND 
+    delete_date::timestamp is  null
+  `;
+    
+  const queryUpdateUserValue = [`${address}`, `${update_date}`, `${user_id}`];
+
+  client.connect() // CONNECTING TO THE DATABASE
+    .then(() => client.query(queryUpdateUser, queryUpdateUserValue)) // SEND THE QUERY TO THE DATABASE
+    .then(function SignInUser(results){ 
+        console.log(results);
+        if(results.rowCount === 1){ // CHECK IF THE USER WAS UPDATED
+          res.send("User updated with success")
+        } else {
+          res.send("User update failed")
+        }
+    }) 
+    .catch(e => console.log(e))
+    .finally(() => client.end())
+});
+
+
+
+///////////////////////////////////////////////////////////
 // POST METHOD TO CREATE PRODUCT'S GROUP 
 //////////////////////////////////////////////////////////
 
@@ -175,7 +213,7 @@ app.post('/productgroupupdate', jsonParser, function(req, res) {
   const product_type = req.body.product_type;
   const update_date = req.body.update_date;
 
-  const queryUpdateProduct = `
+  const queryUpdateProductGroup = `
   UPDATE public.product_group
   SET
     product_type = $1,
@@ -186,13 +224,13 @@ app.post('/productgroupupdate', jsonParser, function(req, res) {
     delete_date::timestamp is  null
   `;
     
-  const queryUpdateProductValue = [`${product_type}`, `${update_date}`, `${group_id}`];
+  const queryUpdateProductGroupValue = [`${product_type}`, `${update_date}`, `${group_id}`];
 
   client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryUpdateProduct, queryUpdateProductValue)) // SEND THE QUERY TO THE DATABASE
+    .then(() => client.query(queryUpdateProductGroup, queryUpdateProductGroupValue)) // SEND THE QUERY TO THE DATABASE
     .then(function SignInUser(results){ 
         console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS UPDATED
+        if(results.rowCount === 1){ // CHECK IF THE PRODUCT'S GROUP WAS UPDATED
           res.send("Product's group updated with success")
         } else {
           res.send("Product's group update failed")
@@ -211,7 +249,7 @@ app.post('/productgroupdelete', jsonParser, function(req, res) {
   const delete_date = req.body.delete_date;
   const update_date = req.body.update_date;
 
-  const queryDeleteProduct = `
+  const queryDeleteProductGroup = `
   UPDATE public.product_group
   SET
     update_date = $1,
@@ -222,13 +260,13 @@ app.post('/productgroupdelete', jsonParser, function(req, res) {
   NOT EXISTS (SELECT 1 FROM public.products WHERE group_id = $4 AND delete_date::timestamp is  null);
   `;
     
-  const queryDeleteProductValue = [`${update_date}`, `${delete_date}`, `${group_id}`, `${group_id}`];
+  const queryDeleteProductGroupValue = [`${update_date}`, `${delete_date}`, `${group_id}`, `${group_id}`];
 
   client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryDeleteProduct, queryDeleteProductValue)) // SEND THE QUERY TO THE DATABASE
+    .then(() => client.query(queryDeleteProductGroup, queryDeleteProductGroupValue)) // SEND THE QUERY TO THE DATABASE
     .then(function SignInUser(results){ 
         console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS UPDATED
+        if(results.rowCount === 1){ // CHECK IF THE PRODUCT'S GROUP WAS DELETED
           res.send("Product's group deleted with success")
         } else {
           res.send("Product's group delete failed")
@@ -343,7 +381,7 @@ app.post('/productdelete', jsonParser, function(req, res) {
     .then(() => client.query(queryDeleteProduct, queryDeleteProductValue)) // SEND THE QUERY TO THE DATABASE
     .then(function SignInUser(results){ 
         console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS UPDATED
+        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS DELETE
           res.send("Product deleted with success")
         } else {
           res.send("Product delete failed")
