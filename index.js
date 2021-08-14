@@ -171,7 +171,7 @@ app.post('/productgroup', jsonParser, function(req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/productgroupupdate', jsonParser, function(req, res) {
-  const product_id = req.body.product_id; 
+  const group_id = req.body.group_id; 
   const product_type = req.body.product_type;
   const update_date = req.body.update_date;
 
@@ -186,7 +186,7 @@ app.post('/productgroupupdate', jsonParser, function(req, res) {
     delete_date::timestamp is  null
   `;
     
-  const queryUpdateProductValue = [`${product_type}`, `${update_date}`, `${product_id}`];
+  const queryUpdateProductValue = [`${product_type}`, `${update_date}`, `${group_id}`];
 
   client.connect() // CONNECTING TO THE DATABASE
     .then(() => client.query(queryUpdateProduct, queryUpdateProductValue)) // SEND THE QUERY TO THE DATABASE
@@ -196,6 +196,42 @@ app.post('/productgroupupdate', jsonParser, function(req, res) {
           res.send("Product's group updated with success")
         } else {
           res.send("Product's group update failed")
+        }
+    }) 
+    .catch(e => console.log(e))
+    .finally(() => client.end())
+});
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO DELETE PRODUCT'S GROUP
+//////////////////////////////////////////////////////////
+
+app.post('/productgroupdelete', jsonParser, function(req, res) {
+  const group_id = req.body.group_id; 
+  const delete_date = req.body.delete_date;
+  const update_date = req.body.update_date;
+
+  const queryDeleteProduct = `
+  UPDATE public.product_group
+  SET
+    update_date = $1,
+    delete_date = $2
+  WHERE 
+    id = $3
+  AND 
+  NOT EXISTS (SELECT 1 FROM public.products WHERE group_id = $4 AND delete_date::timestamp is  null);
+  `;
+    
+  const queryDeleteProductValue = [`${update_date}`, `${delete_date}`, `${group_id}`, `${group_id}`];
+
+  client.connect() // CONNECTING TO THE DATABASE
+    .then(() => client.query(queryDeleteProduct, queryDeleteProductValue)) // SEND THE QUERY TO THE DATABASE
+    .then(function SignInUser(results){ 
+        console.log(results);
+        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS UPDATED
+          res.send("Product's group deleted with success")
+        } else {
+          res.send("Product's group delete failed")
         }
     }) 
     .catch(e => console.log(e))
@@ -253,13 +289,13 @@ app.post('/product', jsonParser, function(req, res) {
 
 app.post('/productupdate', jsonParser, function(req, res) {
   const product_id = req.body.product_id; 
-  const product_quantity = req.body.product_quantity; // THE ROW YOU WANT TO CHANGE
+  const group_id = req.body.group_id; // THE ROW YOU WANT TO CHANGE
   const update_date = req.body.update_date;
 
   const queryUpdateProduct = `
   UPDATE public.products
   SET
-    product_quantity = $1,
+    group_id = $1,
     update_date = $2
   WHERE 
     id = $3 
@@ -267,7 +303,7 @@ app.post('/productupdate', jsonParser, function(req, res) {
     delete_date::timestamp is  null
   `;
     
-  const queryUpdateProductValue = [`${product_quantity}`, `${update_date}`, `${product_id}`];
+  const queryUpdateProductValue = [`${group_id}`, `${update_date}`, `${product_id}`];
 
   client.connect() // CONNECTING TO THE DATABASE
     .then(() => client.query(queryUpdateProduct, queryUpdateProductValue)) // SEND THE QUERY TO THE DATABASE
