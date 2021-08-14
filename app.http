@@ -40,6 +40,17 @@ Content-Type: application/json
 ###
 
 ###
+POST http://localhost:8080/userdelete HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_id": "7",
+    "delete_date": "NOW()",
+    "update_date": "NOW()"
+}
+###
+
+###
 POST http://localhost:8080/productgroup HTTP/1.1
 Content-Type: application/json
 

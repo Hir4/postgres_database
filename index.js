@@ -170,6 +170,39 @@ app.post('/userupdate', jsonParser, function(req, res) {
 });
 
 
+///////////////////////////////////////////////////////////
+// POST METHOD TO DELETE USER 
+//////////////////////////////////////////////////////////
+
+app.post('/userdelete', jsonParser, function(req, res) {
+  const user_id = req.body.user_id; 
+  const delete_date = req.body.delete_date;
+  const update_date = req.body.update_date;
+
+  const queryDeleteUser = `
+  UPDATE public.clients
+  SET
+    update_date = $1,
+    delete_date = $2
+  WHERE 
+    id = $3
+  `;
+    
+  const queryDeleteUserValue = [`${update_date}`, `${delete_date}`, `${user_id}`];
+
+  client.connect() // CONNECTING TO THE DATABASE
+    .then(() => client.query(queryDeleteUser, queryDeleteUserValue)) // SEND THE QUERY TO THE DATABASE
+    .then(function SignInUser(results){ 
+        console.log(results);
+        if(results.rowCount === 1){ // CHECK IF THE USER WAS DELETE
+          res.send("User deleted with success")
+        } else {
+          res.send("User delete failed")
+        }
+    }) 
+    .catch(e => console.log(e))
+    .finally(() => client.end())
+});
 
 ///////////////////////////////////////////////////////////
 // POST METHOD TO CREATE PRODUCT'S GROUP 
