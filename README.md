@@ -46,3 +46,10 @@ npm install cookie-parser
 ```bash
 npm install bcrypt
 ```
+
+## :checkered_flag: Running
+
+```bash
+#Choose the port you want to start, then just run:
+node index.js
+```
