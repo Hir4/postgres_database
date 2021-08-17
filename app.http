@@ -13,10 +13,10 @@ POST http://localhost:8080/signin HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "donatao@gmail.com",
+    "email": "isa@gmail.com",
     "password": "123",
-    "first_name": "Lucca",
-    "last_name": "Donatao",
+    "first_name": "Isabela",
+    "last_name": "Alves",
     "document": "11111111111",
     "address": "Vila Branca",
     "city": "Jacareí",
@@ -33,7 +33,7 @@ POST http://localhost:8080/userupdate HTTP/1.1
 Content-Type: application/json
 
 {
-    "user_id": "3",
+    "user_id": "9",
     "address": "Test new address",
     "update_date": "NOW()"
 }
@@ -44,7 +44,7 @@ POST http://localhost:8080/userdelete HTTP/1.1
 Content-Type: application/json
 
 {
-    "user_id": "7",
+    "user_id": "12",
     "delete_date": "NOW()",
     "update_date": "NOW()"
 }

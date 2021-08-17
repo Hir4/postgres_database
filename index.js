@@ -1,3 +1,6 @@
+//DNAO DEVOLVER 200 QUANDO DER ERRO
+//SEPARAR POR ARQUIVOS AS QUERY
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -21,7 +24,7 @@ const {Client} = require('pg');
 
 const client = new Client({
   user: "postgres",
-  password: "",
+  password: "*Hideki2021",
   host: "localhost",
   port: 5432,
   database: "postgres"
@@ -94,42 +97,15 @@ app.post('/signin', jsonParser, function(req, res) {
   const phone_number = req.body.phone_number;
   const creation_date = req.body.creation_date;
 
-  const queryInsertClient = `
-  INSERT INTO public.clients( 
-    email, 
-    password, 
-    first_name, 
-    last_name, 
-    document, 
-    address, 
-    city, 
-    state, 
-    zip_code, 
-    phone_ddd, 
-    phone_number, 
-    creation_date)
-  SELECT
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
-  WHERE NOT EXISTS (
-  SELECT 1 FROM public.clients WHERE email = $13
-  );`;
-    
-  bcrypt.hash(password, saltRounds, function cryptoPassword(err, hash) { // CRYPTOGRAPHY THE PASSWORD
-    const queryInsertClientValue = [`${email}`, `${hash}`, `${first_name}`, `${last_name}`, `${document}`, `${address}`, `${city}`, `${state}`, `${zip_code}`, `${phone_ddd}`, `${phone_number}`, `${creation_date}`, `${email}`];
-
-    client.connect() // CONNECTING TO THE DATABASE
-      .then(() => client.query(queryInsertClient, queryInsertClientValue)) // SEND THE QUERY TO THE DATABASE
-      .then(function SignInUser(results){ 
-        if(results.rowCount === 1){ // CHECK IF THE NEW USER WAS SIGNED
-          res.send("User signed with success")
-        } else {
-          res.send("User already signed")
-        }
-      }) 
-      .catch(e => console.log(e))
-      .finally(() => client.end())
-
-  });
+  const response = require('./clients/insert.js')(password, email, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number, creation_date);
+  response.then(function(result){
+    if(result === 1){
+      res.send("User signed with success");
+    } else {
+      res.send("User already signed")
+    }
+    console.log(result);
+  })
 });
 
 
@@ -142,31 +118,15 @@ app.post('/userupdate', jsonParser, function(req, res) {
   const address = req.body.address;
   const update_date = req.body.update_date;
 
-  const queryUpdateUser = `
-  UPDATE public.clients
-  SET
-    address = $1,
-    update_date = $2
-  WHERE 
-    id = $3 
-  AND 
-    delete_date::timestamp is  null
-  `;
-    
-  const queryUpdateUserValue = [`${address}`, `${update_date}`, `${user_id}`];
-
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryUpdateUser, queryUpdateUserValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
-        console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE USER WAS UPDATED
-          res.send("User updated with success")
-        } else {
-          res.send("User update failed")
-        }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  const response = require('./clients/update.js')(address, update_date, user_id);
+  response.then(function(result){
+    if(result === 1){
+      res.send("User updated with success");
+    } else {
+      res.send("User update failed")
+    }
+    console.log(result);
+  })
 });
 
 
@@ -179,29 +139,15 @@ app.post('/userdelete', jsonParser, function(req, res) {
   const delete_date = req.body.delete_date;
   const update_date = req.body.update_date;
 
-  const queryDeleteUser = `
-  UPDATE public.clients
-  SET
-    update_date = $1,
-    delete_date = $2
-  WHERE 
-    id = $3
-  `;
-    
-  const queryDeleteUserValue = [`${update_date}`, `${delete_date}`, `${user_id}`];
-
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryDeleteUser, queryDeleteUserValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
-        console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE USER WAS DELETE
-          res.send("User deleted with success")
-        } else {
-          res.send("User delete failed")
-        }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  const response = require('./clients/delete.js')(update_date, delete_date, user_id);
+  response.then(function(result){
+    if(result === 1){
+      res.send("User deleted with success");
+    } else {
+      res.send("User delete failed")
+    }
+    console.log(result);
+  })
 });
 
 ///////////////////////////////////////////////////////////
