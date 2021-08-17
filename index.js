@@ -158,7 +158,7 @@ app.post('/productgroup', jsonParser, function(req, res) {
   const product_type = req.body.product_type;
   const creation_date = req.body.creation_date;
 
-  const response = require('./clients/delete.js')(product_type, creation_date);
+  const response = require('./group/insert.js')(product_type, creation_date);
   response.then(function(result){
     if(result === 1){
       res.send("Group signed with success");
@@ -178,7 +178,7 @@ app.post('/productgroupupdate', jsonParser, function(req, res) {
   const product_type = req.body.product_type;
   const update_date = req.body.update_date;
 
-  const response = require('./clients/delete.js')(product_type, update_date, group_id);
+  const response = require('./group/update.js')(product_type, update_date, group_id);
   response.then(function(result){
     if(result === 1){
       res.send("Product's group updated with success");
@@ -198,7 +198,7 @@ app.post('/productgroupdelete', jsonParser, function(req, res) {
   const delete_date = req.body.delete_date;
   const update_date = req.body.update_date;
 
-  const response = require('./clients/delete.js')(update_date, delete_date, group_id);
+  const response = require('./group/delete.js')(update_date, delete_date, group_id);
   response.then(function(result){
     if(result === 1){
       res.send("Product's group deleted with success");
@@ -221,36 +221,15 @@ app.post('/product', jsonParser, function(req, res) {
   const product_price = req.body.product_price;
   const creation_date = req.body.creation_date;
 
-  const queryInsertProduct = `
-  INSERT INTO public.products( 
-    group_id, 
-    label,
-    product_name,
-    product_quantity,
-    product_price,
-    creation_date)
-  SELECT
-    $1, $2, $3, $4, $5, $6
-  WHERE EXISTS (
-  SELECT 1 FROM public.product_group WHERE id = $7
-  )
-  AND NOT EXISTS (
-    SELECT 1 FROM public.products WHERE product_name = $8
-  );`;
-    
-  const queryInsertProductValue = [`${group_id}`, `${label}`, `${product_name}`, `${product_quantity}`, `${product_price}`, `${creation_date}`, `${group_id}`, `${product_name}`];
-
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryInsertProduct, queryInsertProductValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
-        if(results.rowCount === 1){ // CHECK IF THE NEW PRODUCT WAS SIGNED
-          res.send("Product signed with success")
-        } else {
-          res.send("Product already signed")
-        }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  const response = require('./products/insert.js')(group_id, label, product_name, product_quantity, product_price, creation_date);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Product signed with success");
+    } else {
+      res.send("Product already signed")
+    }
+    console.log(result);
+  })
 });
 
 
@@ -263,31 +242,15 @@ app.post('/productupdate', jsonParser, function(req, res) {
   const group_id = req.body.group_id; // THE ROW YOU WANT TO CHANGE
   const update_date = req.body.update_date;
 
-  const queryUpdateProduct = `
-  UPDATE public.products
-  SET
-    group_id = $1,
-    update_date = $2
-  WHERE 
-    id = $3 
-  AND 
-    delete_date::timestamp is  null
-  `;
-    
-  const queryUpdateProductValue = [`${group_id}`, `${update_date}`, `${product_id}`];
-
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryUpdateProduct, queryUpdateProductValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
-        console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS UPDATED
-          res.send("Product updated with success")
-        } else {
-          res.send("Product update failed")
-        }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  const response = require('./products/update.js')(group_id, label, update_date, product_id);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Product updated with success");
+    } else {
+      res.send("Product update failed")
+    }
+    console.log(result);
+  })
 });
 
 ///////////////////////////////////////////////////////////
@@ -299,29 +262,15 @@ app.post('/productdelete', jsonParser, function(req, res) {
   const delete_date = req.body.delete_date;
   const update_date = req.body.update_date;
 
-  const queryDeleteProduct = `
-  UPDATE public.products
-  SET
-    update_date = $1,
-    delete_date = $2
-  WHERE 
-    id = $3
-  `;
-    
-  const queryDeleteProductValue = [`${update_date}`, `${delete_date}`, `${product_id}`];
-
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryDeleteProduct, queryDeleteProductValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
-        console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE PRODUCT WAS DELETE
-          res.send("Product deleted with success")
-        } else {
-          res.send("Product delete failed")
-        }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  const response = require('./products/delete.js')(update_date, delete_date, product_id);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Product deleted with success");
+    } else {
+      res.send("Product delete failed")
+    }
+    console.log(result);
+  })
 });
 
 app.listen(8080);
