@@ -158,29 +158,15 @@ app.post('/productgroup', jsonParser, function(req, res) {
   const product_type = req.body.product_type;
   const creation_date = req.body.creation_date;
 
-  const queryInsertGroup = `
-  INSERT INTO public.product_group( 
-    product_type, 
-    creation_date)
-  SELECT
-    $1, $2
-  WHERE NOT EXISTS (
-  SELECT 1 FROM public.product_group WHERE product_type = $3
-  );`;
-    
-  const queryInsertGroupValue = [`${product_type}`, `${creation_date}`, `${product_type}`];
-
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryInsertGroup, queryInsertGroupValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){
-      if(results.rowCount === 1){ // CHECK IF THE NEW GROUP WAS SIGNED
-        res.send("Group signed with success")
-      } else {
-        res.send("Group already signed")
-      }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  const response = require('./clients/delete.js')(product_type, creation_date);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Group signed with success");
+    } else {
+      res.send("Group already signed")
+    }
+    console.log(result);
+  })
 });
 
 ///////////////////////////////////////////////////////////
@@ -192,31 +178,15 @@ app.post('/productgroupupdate', jsonParser, function(req, res) {
   const product_type = req.body.product_type;
   const update_date = req.body.update_date;
 
-  const queryUpdateProductGroup = `
-  UPDATE public.product_group
-  SET
-    product_type = $1,
-    update_date = $2
-  WHERE 
-    id = $3 
-  AND 
-    delete_date::timestamp is  null
-  `;
-    
-  const queryUpdateProductGroupValue = [`${product_type}`, `${update_date}`, `${group_id}`];
-
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryUpdateProductGroup, queryUpdateProductGroupValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
-        console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE PRODUCT'S GROUP WAS UPDATED
-          res.send("Product's group updated with success")
-        } else {
-          res.send("Product's group update failed")
-        }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  const response = require('./clients/delete.js')(product_type, update_date, group_id);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Product's group updated with success");
+    } else {
+      res.send("Product's group update failed")
+    }
+    console.log(result);
+  })
 });
 
 ///////////////////////////////////////////////////////////
@@ -228,31 +198,15 @@ app.post('/productgroupdelete', jsonParser, function(req, res) {
   const delete_date = req.body.delete_date;
   const update_date = req.body.update_date;
 
-  const queryDeleteProductGroup = `
-  UPDATE public.product_group
-  SET
-    update_date = $1,
-    delete_date = $2
-  WHERE 
-    id = $3
-  AND 
-  NOT EXISTS (SELECT 1 FROM public.products WHERE group_id = $4 AND delete_date::timestamp is  null);
-  `;
-    
-  const queryDeleteProductGroupValue = [`${update_date}`, `${delete_date}`, `${group_id}`, `${group_id}`];
-
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryDeleteProductGroup, queryDeleteProductGroupValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
-        console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE PRODUCT'S GROUP WAS DELETED
-          res.send("Product's group deleted with success")
-        } else {
-          res.send("Product's group delete failed")
-        }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  const response = require('./clients/delete.js')(update_date, delete_date, group_id);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Product's group deleted with success");
+    } else {
+      res.send("Product's group delete failed")
+    }
+    console.log(result);
+  })
 });
 
 ///////////////////////////////////////////////////////////
