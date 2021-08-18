@@ -117,3 +117,36 @@ Content-Type: application/json
     "update_date": "NOW()"
 }
 ###
+
+###
+POST http://localhost:8080/payment HTTP/1.1
+Content-Type: application/json
+
+{
+    "method_type": "teste",
+    "installments_accept": "12",
+    "creation_date": "NOW()"
+}
+###
+
+###
+POST http://localhost:8080/paymentupdate HTTP/1.1
+Content-Type: application/json
+
+{
+    "method_id": "1",
+    "method_type": "PIX",
+    "update_date": "NOW()"
+}
+###
+
+###
+POST http://localhost:8080/paymentdelete HTTP/1.1
+Content-Type: application/json
+
+{
+    "method_id": "2",
+    "delete_date": "NOW()",
+    "update_date": "NOW()"
+}
+###

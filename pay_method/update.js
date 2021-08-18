@@ -20,26 +20,28 @@ const client = new Client({
   database: "postgres"
 });
 
-module.exports = function(update_date, delete_date, user_id){
-  const queryDeleteUser = `
-  UPDATE public.clients
+module.exports = function(method_type, update_date, method_id){
+  const queryUpdatePayment = `
+  UPDATE public.pay_method
   SET
-    update_date = $1,
-    delete_date = $2
+    method_type = $1,
+    update_date = $2
   WHERE 
-    id = $3
+    id = $3 
+  AND 
+    delete_date::timestamp is  null
   `;
     
-  const queryDeleteUserValue = [`${update_date}`, `${delete_date}`, `${user_id}`];
+  const queryUpdatePaymentValue = [`${method_type}`, `${update_date}`, `${method_id}`];
 
   return client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryDeleteUser, queryDeleteUserValue)) // SEND THE QUERY TO THE DATABASE
+    .then(() => client.query(queryUpdatePayment, queryUpdatePaymentValue)) // SEND THE QUERY TO THE DATABASE
     .then(function SignInUser(results){ 
         console.log(results);
-        if(results.rowCount === 1){ // CHECK IF THE USER WAS DELETE
-          return(1);
+        if(results.rowCount === 1){ // CHECK IF THE PAYMENT WAS UPDATED
+          return(1)
         } else {
-          return(0);
+          return(0)
         }
     }) 
     .catch(e => console.log(e))

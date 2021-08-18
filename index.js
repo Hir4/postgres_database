@@ -1,6 +1,3 @@
-//DNAO DEVOLVER 200 QUANDO DER ERRO
-//SEPARAR POR ARQUIVOS AS QUERY
-
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -9,7 +6,6 @@ var jsonParser = bodyParser.json();
 
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
 const cookieParser = require('cookie-parser');
 
 
@@ -24,7 +20,7 @@ const {Client} = require('pg');
 
 const client = new Client({
   user: "postgres",
-  password: "*Hideki2021",
+  password: "",
   host: "localhost",
   port: 5432,
   database: "postgres"
@@ -268,6 +264,66 @@ app.post('/productdelete', jsonParser, function(req, res) {
       res.send("Product deleted with success");
     } else {
       res.send("Product delete failed")
+    }
+    console.log(result);
+  })
+});
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO CREATE PAYMENT METHOD 
+//////////////////////////////////////////////////////////
+
+app.post('/payment', jsonParser, function(req, res) {
+  const method_type = req.body.method_type;
+  const installments_accept = req.body.installments_accept;
+  const creation_date = req.body.creation_date;
+
+  const response = require('./pay_method/insert.js')(method_type, installments_accept, creation_date);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Payment method signed with success");
+    } else {
+      res.send("Payment method already signed")
+    }
+    console.log(result);
+  })
+});
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO UPDATE PAYMENT 
+//////////////////////////////////////////////////////////
+
+app.post('/paymentupdate', jsonParser, function(req, res) {
+  const method_id = req.body.method_id; 
+  const method_type = req.body.method_type; // THE ROW YOU WANT TO CHANGE
+  const update_date = req.body.update_date;
+
+  const response = require('./pay_method/update.js')(method_type, update_date, method_id);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Payment updated with success");
+    } else {
+      res.send("Payment update failed")
+    }
+    console.log(result);
+  })
+});
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO DELETE PAYMENT 
+//////////////////////////////////////////////////////////
+
+app.post('/paymentdelete', jsonParser, function(req, res) {
+  const method_id = req.body.method_id; 
+  const delete_date = req.body.delete_date;
+  const update_date = req.body.update_date;
+
+  const response = require('./pay_method/delete.js')(update_date, delete_date, method_id);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Payment deleted with success");
+    } else {
+      res.send("Payment delete failed")
     }
     console.log(result);
   })
