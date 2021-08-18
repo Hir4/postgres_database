@@ -47,6 +47,10 @@ npm install cookie-parser
 npm install bcrypt
 ```
 - [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+- [dotenv]
+```bash
+npm install dotenv
+```
 
 
 ## :checkered_flag: Running
