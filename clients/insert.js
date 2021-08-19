@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 var express = require('express');
 var app = express();
 var queryInsertClientValue;
@@ -18,7 +16,11 @@ const { Client } = require('pg');
 //////////////////////////////////////////////////////
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL
+  user: "postgres",
+  password: "",
+  host: "localhost",
+  port: 5432,
+  database: "postgres"
 });
 
 module.exports = async function (password, email, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number, creation_date) {
@@ -47,14 +49,14 @@ module.exports = async function (password, email, first_name, last_name, documen
   });
 
   return client.connect() // CONNECTING TO THE DATABASE
-  .then(() => client.query(queryInsertClient, queryInsertClientValue)) // SEND THE QUERY TO THE DATABASE
-  .then(function InsertUser(results){ 
-    if(results.rowCount === 1){ // CHECK IF THE NEW USER WAS SIGNED
-      return(1);
-    } else {
-      return(0);
-    }
-  }) 
-  .catch(e => console.log(e))
-  .finally(() => client.end())
+    .then(() => client.query(queryInsertClient, queryInsertClientValue)) // SEND THE QUERY TO THE DATABASE
+    .then(function InsertUser(results) {
+      if (results.rowCount === 1) { // CHECK IF THE NEW USER WAS SIGNED
+        return (1);
+      } else {
+        return (0);
+      }
+    })
+    .catch(e => console.log(e))
+    .finally(() => client.end())
 };
