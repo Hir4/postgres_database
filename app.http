@@ -13,10 +13,10 @@ POST http://localhost:8080/signin HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "isa@gmail.com",
+    "email": "thami@gmail.com",
     "password": "123",
-    "first_name": "Isabela",
-    "last_name": "Alves",
+    "first_name": "Thami",
+    "last_name": "Paiva",
     "document": "11111111111",
     "address": "Vila Branca",
     "city": "Jacareí",
@@ -87,11 +87,11 @@ POST http://localhost:8080/product HTTP/1.1
 Content-Type: application/json
 
 {
-    "group_id": "3",
-    "label": "Kingston",
-    "product_name": "Fury Beast - 16GB - DDR4",
-    "product_quantity": "5",
-    "product_price": "849,90",
+    "group_id": "22",
+    "label": "Asus",
+    "product_name": "GeForce GTX 1650",
+    "product_quantity": "20",
+    "product_price": "5.209,00",
     "creation_date": "NOW()"
 }
 ###
@@ -101,7 +101,7 @@ POST http://localhost:8080/productupdate HTTP/1.1
 Content-Type: application/json
 
 {
-    "product_id": "6",
+    "product_id": "10",
     "group_id": "21",
     "update_date": "NOW()"
 }
@@ -112,7 +112,7 @@ POST http://localhost:8080/productdelete HTTP/1.1
 Content-Type: application/json
 
 {
-    "product_id": "4",
+    "product_id": "2",
     "delete_date": "NOW()",
     "update_date": "NOW()"
 }
@@ -148,5 +148,24 @@ Content-Type: application/json
     "method_id": "2",
     "delete_date": "NOW()",
     "update_date": "NOW()"
+}
+###
+
+###
+POST http://localhost:8080/sale HTTP/1.1
+Content-Type: application/json
+
+{
+    "client_id": "15",
+    "total_bought": "5.209,00",
+    "due_date": "NOW() + interval '1 hour'",
+    "shipping": "0",
+    "delivery_time": "NOW() + interval '30 days'",
+    "confirmation": "0",
+    "creation_date": "NOW()",
+    "pay_method": "1",
+    "line_id": "1",
+    "product_id": "7",
+    "product_quantity": "1"
 }
 ###

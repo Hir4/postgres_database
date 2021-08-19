@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var express = require('express');
 var app = express();
 var queryInsertClientValue;
@@ -9,21 +11,17 @@ const saltRounds = 10;
 app.use(cookieParser());
 
 
-const {Client} = require('pg');
+const { Client } = require('pg');
 
 ///////////////////////////////////////////////////////
 // CONFIG DATABASE
 //////////////////////////////////////////////////////
 
 const client = new Client({
-  user: "postgres",
-  password: "",
-  host: "localhost",
-  port: 5432,
-  database: "postgres"
+  connectionString: process.env.DATABASE_URL
 });
 
-module.exports = function(password, email, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number, creation_date){
+module.exports = async function (password, email, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number, creation_date) {
   const queryInsertClient = `
   INSERT INTO public.clients( 
     email, 
@@ -43,22 +41,20 @@ module.exports = function(password, email, first_name, last_name, document, addr
   WHERE NOT EXISTS (
   SELECT 1 FROM public.clients WHERE email = $13
   );`;
-    
+
   bcrypt.hash(password, saltRounds, function cryptoPassword(err, hash) { // CRYPTOGRAPHY THE PASSWORD
     queryInsertClientValue = [`${email}`, `${hash}`, `${first_name}`, `${last_name}`, `${document}`, `${address}`, `${city}`, `${state}`, `${zip_code}`, `${phone_ddd}`, `${phone_number}`, `${creation_date}`, `${email}`];
   });
 
-    return client.connect() // CONNECTING TO THE DATABASE
-      .then(() => client.query(queryInsertClient, queryInsertClientValue)) // SEND THE QUERY TO THE DATABASE
-      .then(function SignInUser(results){ 
-        if(results.rowCount === 1){ // CHECK IF THE NEW USER WAS SIGNED
-          client.end();
-          return(1);
-        } else {
-          client.end();
-          return(0);
-        }
-      }) 
-      .catch(e => console.log(e))
-      .finally(() => client.end())
+  return client.connect() // CONNECTING TO THE DATABASE
+  .then(() => client.query(queryInsertClient, queryInsertClientValue)) // SEND THE QUERY TO THE DATABASE
+  .then(function InsertUser(results){ 
+    if(results.rowCount === 1){ // CHECK IF THE NEW USER WAS SIGNED
+      return(1);
+    } else {
+      return(0);
+    }
+  }) 
+  .catch(e => console.log(e))
+  .finally(() => client.end())
 };

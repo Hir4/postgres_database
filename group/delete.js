@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var express = require('express');
 var app = express();
 
@@ -6,18 +8,14 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 
-const {Client} = require('pg');
+const {Pool} = require('pg');
 
 ///////////////////////////////////////////////////////
 // CONFIG DATABASE
 //////////////////////////////////////////////////////
 
-const client = new Client({
-  user: "postgres",
-  password: "",
-  host: "localhost",
-  port: 5432,
-  database: "postgres"
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
 });
 
 module.exports = function(update_date, delete_date, group_id){
@@ -34,9 +32,9 @@ module.exports = function(update_date, delete_date, group_id){
     
   const queryDeleteProductGroupValue = [`${update_date}`, `${delete_date}`, `${group_id}`, `${group_id}`];
 
-  return client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryDeleteProductGroup, queryDeleteProductGroupValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
+  return pool // CONNECTING TO THE DATABASE
+    .query(queryDeleteProductGroup, queryDeleteProductGroupValue) // SEND THE QUERY TO THE DATABASE
+    .then(function DeleteGroup(results){ 
         console.log(results);
         if(results.rowCount === 1){ // CHECK IF THE PRODUCT'S GROUP WAS DELETED
           return(1)

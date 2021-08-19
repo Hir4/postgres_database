@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var express = require('express');
 var app = express();
 
@@ -6,18 +8,14 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 
-const {Client} = require('pg');
+const {Pool} = require('pg');
 
 ///////////////////////////////////////////////////////
 // CONFIG DATABASE
 //////////////////////////////////////////////////////
 
-const client = new Client({
-  user: "postgres",
-  password: "",
-  host: "localhost",
-  port: 5432,
-  database: "postgres"
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
 });
 
 module.exports = function(method_type, installments_accept, creation_date){
@@ -34,9 +32,9 @@ module.exports = function(method_type, installments_accept, creation_date){
     
   const queryInsertPaymentValue = [`${method_type}`, `${installments_accept}`, `${creation_date}`, `${method_type}`];
 
-  return client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryInsertPayment, queryInsertPaymentValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
+  return pool // CONNECTING TO THE DATABASE
+    .query(queryInsertPayment, queryInsertPaymentValue) // SEND THE QUERY TO THE DATABASE
+    .then(function InsertPayment(results){ 
         if(results.rowCount === 1){ // CHECK IF THE NEW PAYMENT METHOD WAS SIGNED
           return(1)
         } else {

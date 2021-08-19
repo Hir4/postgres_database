@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var express = require('express');
 var app = express();
 
@@ -5,22 +7,17 @@ const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
 
-
-const {Client} = require('pg');
+const { Pool } = require('pg');
 
 ///////////////////////////////////////////////////////
 // CONFIG DATABASE
 //////////////////////////////////////////////////////
 
-const client = new Client({
-  user: "postgres",
-  password: "",
-  host: "localhost",
-  port: 5432,
-  database: "postgres"
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
 });
 
-module.exports = function(group_id, label, product_name, product_quantity, product_price, creation_date, group_id){
+module.exports = function (group_id, label, product_name, product_quantity, product_price, creation_date) {
   const queryInsertProduct = `
   INSERT INTO public.products( 
     group_id, 
@@ -37,18 +34,19 @@ module.exports = function(group_id, label, product_name, product_quantity, produ
   AND NOT EXISTS (
     SELECT 1 FROM public.products WHERE product_name = $8
   );`;
-    
+
   const queryInsertProductValue = [`${group_id}`, `${label}`, `${product_name}`, `${product_quantity}`, `${product_price}`, `${creation_date}`, `${group_id}`, `${product_name}`];
 
-  return client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryInsertProduct, queryInsertProductValue)) // SEND THE QUERY TO THE DATABASE
-    .then(function SignInUser(results){ 
-        if(results.rowCount === 1){ // CHECK IF THE NEW PRODUCT WAS SIGNED
-          return(1)
-        } else {
-          return(0)
-        }
-    }) 
-    .catch(e => console.log(e))
-    .finally(() => client.end())
+  return pool
+    .query(queryInsertProduct, queryInsertProductValue)
+    .then(function InsertProduct(results) {
+      console.log(results);
+      if (results.rowCount === 1) { // CHECK IF THE PRODUCT WAS UPDATED
+        return (1)
+      } else {
+        return (0)
+      }
+    })
+    .catch(err => console.error('Error executing query', err.stack))
+    .finally(() => pool.end())
 };

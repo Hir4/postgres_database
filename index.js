@@ -1,3 +1,4 @@
+require('dotenv').config()
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -11,19 +12,14 @@ const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
 
-
-const {Client} = require('pg');
+const {Pool} = require('pg');
 
 ///////////////////////////////////////////////////////
 // CONFIG DATABASE
 //////////////////////////////////////////////////////
 
-const client = new Client({
-  user: "postgres",
-  password: "",
-  host: "localhost",
-  port: 5432,
-  database: "postgres"
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
 });
 
 ///////////////////////////////////////////////////////////
@@ -46,8 +42,8 @@ app.post('/login', jsonParser, function(req, res) {
 
   const querySelectUser = [`${email}`]
 
-  client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(querySelect, querySelectUser)) // SEND THE QUERY TO THE DATABASE
+  pool // CONNECTING TO THE DATABASE
+    .query(querySelect, querySelectUser) // SEND THE QUERY TO THE DATABASE
     .then(function LoginConfirmation(results){ 
       console.log(results)
       if(results.rowCount === 1){ // VERIFY IF HAS AN USER WITH THE EMAIL SENT
@@ -71,7 +67,7 @@ app.post('/login', jsonParser, function(req, res) {
       };
     }) 
     .catch(e => console.log(e))
-    .finally(() => client.end())
+    .finally(() => pool.end())
 });
 
 
@@ -100,7 +96,7 @@ app.post('/signin', jsonParser, function(req, res) {
     } else {
       res.send("User already signed")
     }
-    console.log(result);
+    // console.log(result);
   })
 });
 
@@ -224,7 +220,7 @@ app.post('/product', jsonParser, function(req, res) {
     } else {
       res.send("Product already signed")
     }
-    console.log(result);
+    // console.log(result);
   })
 });
 
@@ -238,7 +234,8 @@ app.post('/productupdate', jsonParser, function(req, res) {
   const group_id = req.body.group_id; // THE ROW YOU WANT TO CHANGE
   const update_date = req.body.update_date;
 
-  const response = require('./products/update.js')(group_id, label, update_date, product_id);
+  const response = require('./products/update.js')(group_id, update_date, product_id);
+  
   response.then(function(result){
     if(result === 1){
       res.send("Product updated with success");
@@ -325,6 +322,34 @@ app.post('/paymentdelete', jsonParser, function(req, res) {
     } else {
       res.send("Payment delete failed")
     }
+    console.log(result);
+  })
+});
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO CREATE SALES 
+//////////////////////////////////////////////////////////
+
+app.post('/sale', jsonParser, function(req, res) {
+  const client_id = req.body.client_id;
+  const total_bought = req.body.total_bought;
+  const due_date = req.body.due_date;
+  const shipping = req.body.shipping;
+  const delivery_time = req.body.delivery_time;
+  const confirmation = req.body.confirmation;
+  const creation_date = req.body.creation_date;
+  const pay_method = req.body.pay_method;
+  const line_id = req.body.line_id;
+  const product_id = req.body.product_id;
+  const product_quantity = req.body.product_quantity;
+
+  const response = require('./sale/insert.js')(client_id, total_bought, due_date, shipping, delivery_time, confirmation, creation_date, pay_method, line_id, product_id, product_quantity);
+  response.then(function(result){
+    // if(result === 1){
+    //   res.send("Sale signed with success");
+    // } else {
+    //   res.send("Sale failed")
+    // }
     console.log(result);
   })
 });
