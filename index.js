@@ -345,11 +345,32 @@ app.post('/sale', jsonParser, function(req, res) {
 
   const response = require('./sale/insert.js')(client_id, total_bought, due_date, shipping, delivery_time, confirmation, creation_date, pay_method, line_id, product_id, product_quantity);
   response.then(function(result){
-    // if(result === 1){
-    //   res.send("Sale signed with success");
-    // } else {
-    //   res.send("Sale failed")
-    // }
+    if(result === 1){
+      res.send("Sale signed with success");
+    } else {
+      res.send("Sale failed")
+    }
+    console.log(result);
+  })
+});
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO UPDATE SALES 
+//////////////////////////////////////////////////////////
+
+app.post('/saleupdate', jsonParser, function(req, res) {
+  const client_id = req.body.client_id;
+  const confirmation = req.body.confirmation;
+  const update_date = req.body.update_date;
+  const sale_header_id = req.body.sale_header_id;
+
+  const response = require('./sale/update.js')(sale_header_id, client_id, update_date, confirmation);
+  response.then(function(result){
+    if(result === 1){
+      res.send("Sale updated with success");
+    } else {
+      res.send("Sale update failed")
+    }
     console.log(result);
   })
 });

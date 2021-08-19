@@ -157,15 +157,27 @@ Content-Type: application/json
 
 {
     "client_id": "15",
-    "total_bought": "5.209,00",
-    "due_date": "NOW() + interval '1 hour'",
+    "total_bought": "1.282,24",
+    "due_date": "NOW()",
     "shipping": "0",
-    "delivery_time": "NOW() + interval '30 days'",
+    "delivery_time": "NOW()",
     "confirmation": "0",
     "creation_date": "NOW()",
     "pay_method": "1",
-    "line_id": "1",
-    "product_id": "7",
+    "line_id": "3",
+    "product_id": "1",
     "product_quantity": "1"
+}
+###
+
+###
+POST http://localhost:8080/saleupdate HTTP/1.1
+Content-Type: application/json
+
+{
+    "client_id": "15",
+    "confirmation": "1",
+    "sale_header_id": "3",
+    "update_date": "NOW()"
 }
 ###
