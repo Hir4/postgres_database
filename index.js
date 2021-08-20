@@ -291,18 +291,24 @@ app.post('/userdelete', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/productgroup', jsonParser, function (req, res) {
-  const product_type = req.body.product_type;
-  const creation_date = req.body.creation_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const product_type = req.body.product_type;
+    const creation_date = req.body.creation_date;
 
-  const response = require('./group/insert.js')(product_type, creation_date);
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Group signed with success");
-    } else {
-      res.send("Group already signed")
-    }
-    console.log(result);
-  })
+    const response = require('./group/insert.js')(product_type, creation_date);
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Group signed with success");
+      } else {
+        res.send("Group already signed")
+      }
+      console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 ///////////////////////////////////////////////////////////
@@ -310,19 +316,25 @@ app.post('/productgroup', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/productgroupupdate', jsonParser, function (req, res) {
-  const group_id = req.body.group_id;
-  const product_type = req.body.product_type;
-  const update_date = req.body.update_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const group_id = req.body.group_id;
+    const product_type = req.body.product_type;
+    const update_date = req.body.update_date;
 
-  const response = require('./group/update.js')(product_type, update_date, group_id);
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Product's group updated with success");
-    } else {
-      res.send("Product's group update failed")
-    }
-    console.log(result);
-  })
+    const response = require('./group/update.js')(product_type, update_date, group_id);
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Product's group updated with success");
+      } else {
+        res.send("Product's group update failed")
+      }
+      console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 ///////////////////////////////////////////////////////////
@@ -330,19 +342,25 @@ app.post('/productgroupupdate', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/productgroupdelete', jsonParser, function (req, res) {
-  const group_id = req.body.group_id;
-  const delete_date = req.body.delete_date;
-  const update_date = req.body.update_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const group_id = req.body.group_id;
+    const delete_date = req.body.delete_date;
+    const update_date = req.body.update_date;
 
-  const response = require('./group/delete.js')(update_date, delete_date, group_id);
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Product's group deleted with success");
-    } else {
-      res.send("Product's group delete failed")
-    }
-    console.log(result);
-  })
+    const response = require('./group/delete.js')(update_date, delete_date, group_id);
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Product's group deleted with success");
+      } else {
+        res.send("Product's group delete failed")
+      }
+      console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 ///////////////////////////////////////////////////////////
@@ -350,22 +368,28 @@ app.post('/productgroupdelete', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/product', jsonParser, function (req, res) {
-  const group_id = req.body.group_id;
-  const label = req.body.label;
-  const product_name = req.body.product_name;
-  const product_quantity = req.body.product_quantity;
-  const product_price = req.body.product_price;
-  const creation_date = req.body.creation_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const group_id = req.body.group_id;
+    const label = req.body.label;
+    const product_name = req.body.product_name;
+    const product_quantity = req.body.product_quantity;
+    const product_price = req.body.product_price;
+    const creation_date = req.body.creation_date;
 
-  const response = require('./products/insert.js')(group_id, label, product_name, product_quantity, product_price, creation_date);
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Product signed with success");
-    } else {
-      res.send("Product already signed")
-    }
-    // console.log(result);
-  })
+    const response = require('./products/insert.js')(group_id, label, product_name, product_quantity, product_price, creation_date);
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Product signed with success");
+      } else {
+        res.send("Product already signed")
+      }
+      // console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 
@@ -374,20 +398,26 @@ app.post('/product', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/productupdate', jsonParser, function (req, res) {
-  const product_id = req.body.product_id;
-  const group_id = req.body.group_id; // THE ROW YOU WANT TO CHANGE
-  const update_date = req.body.update_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const product_id = req.body.product_id;
+    const group_id = req.body.group_id; // THE ROW YOU WANT TO CHANGE
+    const update_date = req.body.update_date;
 
-  const response = require('./products/update.js')(group_id, update_date, product_id);
+    const response = require('./products/update.js')(group_id, update_date, product_id);
 
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Product updated with success");
-    } else {
-      res.send("Product update failed")
-    }
-    console.log(result);
-  })
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Product updated with success");
+      } else {
+        res.send("Product update failed")
+      }
+      console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 ///////////////////////////////////////////////////////////
@@ -395,19 +425,25 @@ app.post('/productupdate', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/productdelete', jsonParser, function (req, res) {
-  const product_id = req.body.product_id;
-  const delete_date = req.body.delete_date;
-  const update_date = req.body.update_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const product_id = req.body.product_id;
+    const delete_date = req.body.delete_date;
+    const update_date = req.body.update_date;
 
-  const response = require('./products/delete.js')(update_date, delete_date, product_id);
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Product deleted with success");
-    } else {
-      res.send("Product delete failed")
-    }
-    console.log(result);
-  })
+    const response = require('./products/delete.js')(update_date, delete_date, product_id);
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Product deleted with success");
+      } else {
+        res.send("Product delete failed")
+      }
+      console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 ///////////////////////////////////////////////////////////
@@ -415,19 +451,25 @@ app.post('/productdelete', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/payment', jsonParser, function (req, res) {
-  const method_type = req.body.method_type;
-  const installments_accept = req.body.installments_accept;
-  const creation_date = req.body.creation_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const method_type = req.body.method_type;
+    const installments_accept = req.body.installments_accept;
+    const creation_date = req.body.creation_date;
 
-  const response = require('./pay_method/insert.js')(method_type, installments_accept, creation_date);
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Payment method signed with success");
-    } else {
-      res.send("Payment method already signed")
-    }
-    console.log(result);
-  })
+    const response = require('./pay_method/insert.js')(method_type, installments_accept, creation_date);
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Payment method signed with success");
+      } else {
+        res.send("Payment method already signed")
+      }
+      console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 ///////////////////////////////////////////////////////////
@@ -435,19 +477,25 @@ app.post('/payment', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/paymentupdate', jsonParser, function (req, res) {
-  const method_id = req.body.method_id;
-  const method_type = req.body.method_type; // THE ROW YOU WANT TO CHANGE
-  const update_date = req.body.update_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const method_id = req.body.method_id;
+    const method_type = req.body.method_type; // THE ROW YOU WANT TO CHANGE
+    const update_date = req.body.update_date;
 
-  const response = require('./pay_method/update.js')(method_type, update_date, method_id);
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Payment updated with success");
-    } else {
-      res.send("Payment update failed")
-    }
-    console.log(result);
-  })
+    const response = require('./pay_method/update.js')(method_type, update_date, method_id);
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Payment updated with success");
+      } else {
+        res.send("Payment update failed")
+      }
+      console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 ///////////////////////////////////////////////////////////
@@ -455,19 +503,25 @@ app.post('/paymentupdate', jsonParser, function (req, res) {
 //////////////////////////////////////////////////////////
 
 app.post('/paymentdelete', jsonParser, function (req, res) {
-  const method_id = req.body.method_id;
-  const delete_date = req.body.delete_date;
-  const update_date = req.body.update_date;
+  const cookie = req.cookies[`idTokenAdmin`];
+  if (cookie && cookie === tokenCheckAdmin) {
+    const method_id = req.body.method_id;
+    const delete_date = req.body.delete_date;
+    const update_date = req.body.update_date;
 
-  const response = require('./pay_method/delete.js')(update_date, delete_date, method_id);
-  response.then(function (result) {
-    if (result === 1) {
-      res.send("Payment deleted with success");
-    } else {
-      res.send("Payment delete failed")
-    }
-    console.log(result);
-  })
+    const response = require('./pay_method/delete.js')(update_date, delete_date, method_id);
+    response.then(function (result) {
+      if (result === 1) {
+        res.send("Payment deleted with success");
+      } else {
+        res.send("Payment delete failed")
+      }
+      console.log(result);
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.send("Something went wrong");
+  }
 });
 
 ///////////////////////////////////////////////////////////
