@@ -1,4 +1,56 @@
 ###
+POST http://localhost:8080/loginadmin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "donatao@gmail.com",
+    "password": "123"
+}
+###
+
+###
+POST http://localhost:8080/signinadmin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "john@gmail.com",
+    "password": "123",
+    "first_name": "John",
+    "last_name": "John",
+    "document": "11111111111",
+    "address": "Vila Branca",
+    "city": "Jacareí",
+    "state": "SP",
+    "zip_code": "11111111",
+    "phone_ddd": "12",
+    "phone_number": "111111111",
+    "creation_date": "NOW()"
+}
+###
+
+###
+POST http://localhost:8080/adminupdate HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_id": "8",
+    "address": "Test new address",
+    "update_date": "NOW()"
+}
+###
+
+###
+POST http://localhost:8080/admindelete HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_id": "17",
+    "delete_date": "NOW()",
+    "update_date": "NOW()"
+}
+###
+
+###
 POST http://localhost:8080/login HTTP/1.1
 Content-Type: application/json
 
@@ -33,7 +85,7 @@ POST http://localhost:8080/userupdate HTTP/1.1
 Content-Type: application/json
 
 {
-    "user_id": "17",
+    "user_id": "8",
     "address": "Test new address",
     "update_date": "NOW()"
 }
