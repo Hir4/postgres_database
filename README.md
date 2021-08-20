@@ -52,6 +52,10 @@ npm install bcrypt
 ```bash
 npm install dotenv
 ```
+- [JWT]
+```bash
+npm install jsonwebtoken
+```
 
 
 ## :checkered_flag: Running

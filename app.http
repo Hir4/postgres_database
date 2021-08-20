@@ -3,7 +3,7 @@ POST http://localhost:8080/loginadmin HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "caio@gmail.com",
+    "email": "hideki@gmail.com",
     "password": "123"
 }
 ###
@@ -13,10 +13,10 @@ POST http://localhost:8080/signinadmin HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "eduardo@gmail.com",
+    "email": "hideki@gmail.com",
     "password": "123",
-    "first_name": "Caio",
-    "last_name": "Eduardo",
+    "first_name": "Rafael",
+    "last_name": "Hideki",
     "document": "11111111111",
     "address": "Vila Branca",
     "city": "Jacareí",
@@ -33,7 +33,6 @@ POST http://localhost:8080/adminupdate HTTP/1.1
 Content-Type: application/json
 
 {
-    "user_id": "2",
     "address": "Test new address 2",
     "update_date": "NOW()"
 }
@@ -44,7 +43,6 @@ POST http://localhost:8080/admindelete HTTP/1.1
 Content-Type: application/json
 
 {
-    "user_id": "17",
     "delete_date": "NOW()",
     "update_date": "NOW()"
 }
@@ -85,8 +83,7 @@ POST http://localhost:8080/userupdate HTTP/1.1
 Content-Type: application/json
 
 {
-    "user_id": "8",
-    "address": "Test new address",
+    "address": "Test new address 10",
     "update_date": "NOW()"
 }
 ###
@@ -96,7 +93,6 @@ POST http://localhost:8080/userdelete HTTP/1.1
 Content-Type: application/json
 
 {
-    "user_id": "17",
     "delete_date": "NOW()",
     "update_date": "NOW()"
 }
@@ -208,7 +204,6 @@ POST http://localhost:8080/sale HTTP/1.1
 Content-Type: application/json
 
 {
-    "client_id": "2",
     "total_bought": "849,90",
     "due_date": "NOW()",
     "shipping": "0",
@@ -227,7 +222,6 @@ POST http://localhost:8080/saleupdate HTTP/1.1
 Content-Type: application/json
 
 {
-    "client_id": "2",
     "confirmation": "1",
     "sale_header_id": "7",
     "update_date": "NOW()"
