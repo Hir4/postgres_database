@@ -15,6 +15,7 @@
 ## :dart: About ##
 
 Project using Node with Postgresql.
+- [DbDesigner](https://dbdesigner.page.link/rpCrAKi6qsG5MtDLA)
 
 ## :rocket: Technologies ##
 
