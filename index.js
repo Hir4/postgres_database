@@ -59,13 +59,13 @@ app.post('/loginadmin', jsonParser, function (req, res) {
               console.log(hashIdToken);
             } else {
               res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-              res.send("Login not found");
+              res.status(500).send("Login not found");
             }
           })
         }
       } else {
         res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-        res.send("Login not found");
+        res.status(500).send("Login not found");
       };
     })
     .catch(e => console.log(e))
@@ -95,7 +95,7 @@ app.post('/signinadmin', jsonParser, function (req, res) {
     if (result === 1) {
       res.send("Admin signed with success");
     } else {
-      res.send("Admin already signed")
+      res.status(500).send("Admin already signed")
     }
     // console.log(result);
   })
@@ -117,13 +117,13 @@ app.post('/adminupdate', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Admin updated with success");
       } else {
-        res.send("Admin update failed")
+        res.status(500).send("Admin update failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -143,13 +143,13 @@ app.post('/admindelete', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Admin deleted with success");
       } else {
-        res.send("Admin delete failed")
+        res.status(500).send("Admin delete failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -189,13 +189,13 @@ app.post('/login', jsonParser, function (req, res) {
               console.log(hashIdToken);
             } else {
               res.clearCookie(`idToken`); // CLEAR THE COOKIE
-              res.send("Login not found");
+              res.status(500).send("Login not found");
             }
           })
         }
       } else {
         res.clearCookie(`idToken`); // CLEAR THE COOKIE
-        res.send("Login not found");
+        res.status(500).send("Login not found");
       };
     })
     .catch(e => console.log(e))
@@ -226,7 +226,7 @@ app.post('/signin', jsonParser, function (req, res) {
     if (result === 1) {
       res.send("User signed with success");
     } else {
-      res.send("User already signed")
+      res.status(500).send("User already signed")
     }
     // console.log(result);
   })
@@ -249,13 +249,13 @@ app.post('/userupdate', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("User updated with success");
       } else {
-        res.send("User update failed")
+        res.status(500).send("User update failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idToken`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -276,13 +276,13 @@ app.post('/userdelete', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("User deleted with success");
       } else {
-        res.send("User delete failed")
+        res.status(500).send("User delete failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idToken`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -301,13 +301,13 @@ app.post('/productgroup', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Group signed with success");
       } else {
-        res.send("Group already signed")
+        res.status(500).send("Group already signed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -327,13 +327,13 @@ app.post('/productgroupupdate', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Product's group updated with success");
       } else {
-        res.send("Product's group update failed")
+        res.status(500).send("Product's group update failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -353,13 +353,13 @@ app.post('/productgroupdelete', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Product's group deleted with success");
       } else {
-        res.send("Product's group delete failed")
+        res.status(500).send("Product's group delete failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -382,13 +382,13 @@ app.post('/product', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Product signed with success");
       } else {
-        res.send("Product already signed")
+        res.status(500).send("Product already signed")
       }
       // console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -410,13 +410,13 @@ app.post('/productupdate', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Product updated with success");
       } else {
-        res.send("Product update failed")
+        res.status(500).send("Product update failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -436,13 +436,13 @@ app.post('/productdelete', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Product deleted with success");
       } else {
-        res.send("Product delete failed")
+        res.status(500).send("Product delete failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -462,13 +462,13 @@ app.post('/payment', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Payment method signed with success");
       } else {
-        res.send("Payment method already signed")
+        res.status(500).send("Payment method already signed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -488,13 +488,13 @@ app.post('/paymentupdate', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Payment updated with success");
       } else {
-        res.send("Payment update failed")
+        res.status(500).send("Payment update failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -514,13 +514,13 @@ app.post('/paymentdelete', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Payment deleted with success");
       } else {
-        res.send("Payment delete failed")
+        res.status(500).send("Payment delete failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -548,13 +548,13 @@ app.post('/sale', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Sale signed with success");
       } else {
-        res.send("Sale failed")
+        res.status(500).send("Sale failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idToken`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
@@ -575,13 +575,13 @@ app.post('/saleupdate', jsonParser, function (req, res) {
       if (result === 1) {
         res.send("Sale updated with success");
       } else {
-        res.send("Sale update failed")
+        res.status(500).send("Sale update failed")
       }
       console.log(result);
     })
   } else {
     res.clearCookie(`idToken`); // CLEAR THE COOKIE
-    res.send("Something went wrong");
+    res.status(500).send("Something went wrong");
   }
 });
 
