@@ -16,6 +16,7 @@
 
 Project using Node with Postgresql.
 - [DbDesigner](https://dbdesigner.page.link/rpCrAKi6qsG5MtDLA)
+- [Figma](https://www.figma.com/file/moNWcQJ3HhC0Hw2fIbwdtW/Untitled?node-id=0%3A1)
 
 ## :rocket: Technologies ##
 
