@@ -57,6 +57,10 @@ npm install dotenv
 ```bash
 npm install jsonwebtoken
 ```
+- [CORS]
+```bash
+npm install cors
+```
 
 
 ## :checkered_flag: Running
