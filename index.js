@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var jsonParser = bodyParser.json();
 var jwt = require('jsonwebtoken');
+var cors = require('cors')
 
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
@@ -17,6 +18,13 @@ let secretKeyJWTAdmin;
 app.use(cookieParser());
 
 const { Pool } = require('pg');
+
+const corsOptions = {
+  origin: true,
+  credentials: true,
+}
+
+app.use(cors(corsOptions))
 
 ///////////////////////////////////////////////////////
 // CONFIG DATABASE
@@ -43,7 +51,9 @@ app.post('/loginadmin', jsonParser, function (req, res) {
   FROM 
 	  public.admin 
   WHERE 
-	  email = $1;`;
+	  email = $1
+    AND 
+    delete_date::timestamp is  null;`;
 
   const querySelectAdmin = [`${email}`]
 
@@ -180,7 +190,9 @@ app.post('/login', jsonParser, function (req, res) {
   FROM 
 	  public.clients 
   WHERE 
-	  email = $1;`;
+	  email = $1
+  AND 
+    delete_date::timestamp is  null;`;
 
   const querySelectUser = [`${email}`]
 
@@ -197,7 +209,7 @@ app.post('/login', jsonParser, function (req, res) {
               jwt.sign({ id: results.rows[0].id }, secretKeyJWT, { algorithm: 'HS256' }, function (err, token) {
                 cookieCheckClient = token
                 res.cookie(`idToken`, token, { httpOnly: true }); // CREATE A COOKIE WITH THE TOKEN
-                res.send("Connected");
+                res.send(token);
               })
             } else {
               res.clearCookie(`idToken`); // CLEAR THE COOKIE
@@ -210,8 +222,6 @@ app.post('/login', jsonParser, function (req, res) {
         res.status(500).send("Login not found");
       };
     })
-    .catch(e => console.log(e))
-    .finally(() => pool.end())
 });
 
 
@@ -377,6 +387,30 @@ app.post('/productgroupdelete', jsonParser, function (req, res) {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
     res.status(500).send("Something went wrong");
   }
+});
+
+///////////////////////////////////////////////////////////
+// GET METHOD TO GET ALL PRODUCT 
+//////////////////////////////////////////////////////////
+
+app.get('/getproducts', jsonParser, function (req, res) {
+  const querySelect = `
+  SELECT 
+    id,
+	  label, 
+    product_name,
+    product_price,
+    product_quantity
+  FROM 
+	  public.products 
+  WHERE 
+    delete_date::timestamp is  null;`;
+  pool
+    .query(querySelect)
+    .then(result => {
+      console.log(result.rows)
+      res.send(JSON.stringify(result.rows))
+    })
 });
 
 ///////////////////////////////////////////////////////////
