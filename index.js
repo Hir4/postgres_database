@@ -408,6 +408,40 @@ app.get('/getproducts', jsonParser, function (req, res) {
   pool
     .query(querySelect)
     .then(result => {
+      res.send(JSON.stringify(result.rows))
+    })
+});
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO GET ONE PRODUCT 
+//////////////////////////////////////////////////////////
+
+app.post('/getproductwithid', jsonParser, function (req, res) {
+  const id = req.body.id;
+
+  console.log(id)
+  
+  const querySelect = `
+  SELECT 
+    public.products.id,
+	  label, 
+    product_name,
+    product_price,
+    product_quantity,
+    product_type
+  FROM 
+	  public.products
+  INNER JOIN 
+    public.product_group
+  ON
+    group_id = public.product_group.id
+  WHERE
+    $1 = public.products.id
+  AND
+    public.products.delete_date::timestamp is  null;`;
+  pool
+    .query(querySelect, [`${id}`])
+    .then(result => {
       console.log(result.rows)
       res.send(JSON.stringify(result.rows))
     })
