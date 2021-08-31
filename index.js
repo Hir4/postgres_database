@@ -184,6 +184,7 @@ app.post('/login', jsonParser, function (req, res) {
   const querySelect = `
   SELECT 
     id,
+    first_name,
 	  email, 
     password,
     delete_date
@@ -199,6 +200,7 @@ app.post('/login', jsonParser, function (req, res) {
   pool // CONNECTING TO THE DATABASE
     .query(querySelect, querySelectUser) // SEND THE QUERY TO THE DATABASE
     .then(function LoginConfirmation(results) {
+      console.log(results);
       if (results.rowCount === 1) { // VERIFY IF HAS AN USER WITH THE EMAIL SENT
         if (results.rows[0].delete_date === null) { // VERIFY IF THE USER WAS DELETED
           bcrypt.compare(password, results.rows[0].password, function (err, result) { // VERIFY IF BOTH PASSWORDS MATCH
@@ -206,7 +208,7 @@ app.post('/login', jsonParser, function (req, res) {
               const idToken = `${(new Date()).getTime()}:${email}`; // CREATE A TOKEN
               const hashIdToken = crypto.createHash('sha256').update(idToken).digest('base64'); // CRYPTOGRAPHY THE TOKEN
               secretKeyJWT = hashIdToken;
-              jwt.sign({ id: results.rows[0].id }, secretKeyJWT, { algorithm: 'HS256' }, function (err, token) {
+              jwt.sign({ id: results.rows[0].id, name: results.rows[0].first_name}, secretKeyJWT, { algorithm: 'HS256' }, function (err, token) {
                 cookieCheckClient = token
                 res.cookie(`idToken`, token, { httpOnly: true }); // CREATE A COOKIE WITH THE TOKEN
                 res.send(token);
@@ -264,10 +266,10 @@ app.post('/userupdate', jsonParser, function (req, res) {
   if (cookie && cookie === cookieCheckClient) {
     jwt.verify(cookie, secretKeyJWT, function (err, decoded) {
       const user_id = decoded.id;
-      const address = req.body.address;
+      const new_password = req.body.new_password;
       const update_date = req.body.update_date;
 
-      const response = require('./clients/update.js')(address, update_date, user_id);
+      const response = require('./clients/update.js')(new_password, update_date, user_id);
       response.then(function (result) {
         if (result === 1) {
           res.send("User updated with success");
