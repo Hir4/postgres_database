@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-var queryInsertClientValue;
 
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
@@ -9,18 +8,14 @@ const saltRounds = 10;
 app.use(cookieParser());
 
 
-const { Client } = require('pg');
+const { Pool } = require('pg');
 
 ///////////////////////////////////////////////////////
 // CONFIG DATABASE
 //////////////////////////////////////////////////////
 
-const client = new Client({
-  user: "postgres",
-  password: "*Hideki2021",
-  host: "localhost",
-  port: 5432,
-  database: "postgres"
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
 });
 
 module.exports = async function (password, email, first_name, last_name, document, address, city, state, zip_code, phone_ddd, phone_number, creation_date) {
@@ -44,12 +39,12 @@ module.exports = async function (password, email, first_name, last_name, documen
   SELECT 1 FROM public.clients WHERE email = $13
   );`;
 
-  bcrypt.hash(password, saltRounds, function cryptoPassword(err, hash) { // CRYPTOGRAPHY THE PASSWORD
-    queryInsertClientValue = [`${email}`, `${hash}`, `${first_name}`, `${last_name}`, `${document}`, `${address}`, `${city}`, `${state}`, `${zip_code}`, `${phone_ddd}`, `${phone_number}`, `${creation_date}`, `${email}`];
-  });
+  let bcryptInformations = await bcrypt.hash(password, saltRounds).then(function (hash) { // CRYPTOGRAPHY THE PASSWORD
+    return [`${email}`, `${hash}`, `${first_name}`, `${last_name}`, `${document}`, `${address}`, `${city}`, `${state}`, `${zip_code}`, `${phone_ddd}`, `${phone_number}`, `${creation_date}`, `${email}`];
+  })
 
-  return client.connect() // CONNECTING TO THE DATABASE
-    .then(() => client.query(queryInsertClient, queryInsertClientValue)) // SEND THE QUERY TO THE DATABASE
+  return pool // CONNECTING TO THE DATABASE
+    .query(queryInsertClient, bcryptInformations) // SEND THE QUERY TO THE DATABASE
     .then(function InsertUser(results) {
       if (results.rowCount === 1) { // CHECK IF THE NEW USER WAS SIGNED
         return (1);
@@ -58,5 +53,4 @@ module.exports = async function (password, email, first_name, last_name, documen
       }
     })
     .catch(e => console.log(e))
-    .finally(() => client.end())
 };
