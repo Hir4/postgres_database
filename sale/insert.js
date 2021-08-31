@@ -46,7 +46,6 @@ module.exports = function (client_id, total_bought, due_date, shipping, delivery
   return pool // CONNECTING TO THE DATABASE
     .query(queryInsertSale, queryInsertSaleValue) // SEND THE QUERY TO THE DATABASE
     .then(function SignInSale(results){ 
-      console.log(results)
         if(results.rowCount === 1){ // CHECK IF THE NEW SALE WAS SIGNED
           return(1)
         } else {

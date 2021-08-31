@@ -32,7 +32,6 @@ module.exports = function(update_date, delete_date, product_id){
   return pool
     .query(queryDeleteProduct, queryDeleteProductValue)
     .then(function DeleteProduct(results) {
-      console.log(results);
       if (results.rowCount === 1) { // CHECK IF THE PRODUCT WAS UPDATED
         return (1)
       } else {

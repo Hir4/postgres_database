@@ -34,7 +34,6 @@ module.exports = function (group_id, update_date, product_id) {
   return pool
     .query(queryUpdateProduct, queryUpdateProductValue)
     .then(function UpdateProduct(results) {
-      // console.log(results);
       if (results.rowCount === 1) { // CHECK IF THE PRODUCT WAS UPDATED
         return (1)
       } else {

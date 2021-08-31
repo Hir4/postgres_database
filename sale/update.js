@@ -36,7 +36,6 @@ module.exports = function (sale_header_id, client_id, update_date, confirmation)
   return pool // CONNECTING TO THE DATABASE
     .query(queryUpdateSale, queryUpdateSaleValue) // SEND THE QUERY TO THE DATABASE
     .then(function UpdateSale(results){ 
-      console.log(results)
         if(results.rowCount === 1){ // CHECK IF THE NEW SALE WAS SIGNED
           return(1)
         } else {

@@ -39,7 +39,6 @@ module.exports = async function (new_password, update_date, user_id) {
   return pool // CONNECTING TO THE DATABASE
     .query(queryUpdateUser, bcryptPassword) // SEND THE QUERY TO THE DATABASE
     .then(function UpdateUser(results) {
-      console.log(results);
       if (results.rowCount === 1) { // CHECK IF THE USER WAS UPDATED
         return (1);
       } else {

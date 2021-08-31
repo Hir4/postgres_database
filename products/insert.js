@@ -40,7 +40,6 @@ module.exports = function (group_id, label, product_name, product_quantity, prod
   return pool
     .query(queryInsertProduct, queryInsertProductValue)
     .then(function InsertProduct(results) {
-      console.log(results);
       if (results.rowCount === 1) { // CHECK IF THE PRODUCT WAS UPDATED
         return (1)
       } else {

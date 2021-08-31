@@ -33,7 +33,6 @@ module.exports = function(update_date, delete_date, user_id){
   return pool // CONNECTING TO THE DATABASE
     .query(queryDeleteUser, queryDeleteUserValue) // SEND THE QUERY TO THE DATABASE
     .then(function SignInUser(results){ 
-        console.log(results);
         if(results.rowCount === 1){ // CHECK IF THE USER WAS DELETE
           return(1);
         } else {

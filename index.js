@@ -60,7 +60,6 @@ app.post('/loginadmin', jsonParser, function (req, res) {
   pool // CONNECTING TO THE DATABASE
     .query(querySelect, querySelectAdmin) // SEND THE QUERY TO THE DATABASE
     .then(function LoginConfirmation(results) {
-      console.log(results)
       if (results.rowCount === 1) { // VERIFY IF HAS AN USER WITH THE EMAIL SENT
         if (results.rows[0].delete_date === null) { // VERIFY IF THE USER WAS DELETED
           bcrypt.compare(password, results.rows[0].password, function (err, result) { // VERIFY IF BOTH PASSWORDS MATCH
@@ -85,7 +84,6 @@ app.post('/loginadmin', jsonParser, function (req, res) {
       };
     })
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 });
 
 ///////////////////////////////////////////////////////////
@@ -113,7 +111,6 @@ app.post('/signinadmin', jsonParser, function (req, res) {
     } else {
       res.status(500).send("Admin already signed")
     }
-    // console.log(result);
   })
 });
 
@@ -136,7 +133,6 @@ app.post('/adminupdate', jsonParser, function (req, res) {
         } else {
           res.status(500).send("Admin update failed")
         }
-        console.log(result);
       })
     })
   } else {
@@ -164,7 +160,6 @@ app.post('/admindelete', jsonParser, function (req, res) {
         } else {
           res.status(500).send("Admin delete failed")
         }
-        console.log(result);
       })
     })
   } else {
@@ -200,7 +195,6 @@ app.post('/login', jsonParser, function (req, res) {
   pool // CONNECTING TO THE DATABASE
     .query(querySelect, querySelectUser) // SEND THE QUERY TO THE DATABASE
     .then(function LoginConfirmation(results) {
-      console.log(results);
       if (results.rowCount === 1) { // VERIFY IF HAS AN USER WITH THE EMAIL SENT
         if (results.rows[0].delete_date === null) { // VERIFY IF THE USER WAS DELETED
           bcrypt.compare(password, results.rows[0].password, function (err, result) { // VERIFY IF BOTH PASSWORDS MATCH
@@ -208,7 +202,7 @@ app.post('/login', jsonParser, function (req, res) {
               const idToken = `${(new Date()).getTime()}:${email}`; // CREATE A TOKEN
               const hashIdToken = crypto.createHash('sha256').update(idToken).digest('base64'); // CRYPTOGRAPHY THE TOKEN
               secretKeyJWT = hashIdToken;
-              jwt.sign({ id: results.rows[0].id, name: results.rows[0].first_name}, secretKeyJWT, { algorithm: 'HS256' }, function (err, token) {
+              jwt.sign({ id: results.rows[0].id, name: results.rows[0].first_name }, secretKeyJWT, { algorithm: 'HS256' }, function (err, token) {
                 cookieCheckClient = token
                 res.cookie(`idToken`, token, { httpOnly: true }); // CREATE A COOKIE WITH THE TOKEN
                 res.send(token);
@@ -224,6 +218,7 @@ app.post('/login', jsonParser, function (req, res) {
         res.status(500).send("Login not found");
       };
     })
+    .catch(e => console.log(e))
 });
 
 
@@ -252,7 +247,6 @@ app.post('/signin', jsonParser, function (req, res) {
     } else {
       res.status(500).send("User already signed")
     }
-    // console.log(result);
   })
 });
 
@@ -276,7 +270,6 @@ app.post('/userupdate', jsonParser, function (req, res) {
         } else {
           res.status(500).send("User update failed")
         }
-        console.log(result);
       })
     })
   } else {
@@ -305,7 +298,6 @@ app.post('/userdelete', jsonParser, function (req, res) {
         } else {
           res.status(500).send("User delete failed")
         }
-        console.log(result);
       })
     })
   } else {
@@ -331,7 +323,6 @@ app.post('/productgroup', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Group already signed")
       }
-      console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -357,7 +348,6 @@ app.post('/productgroupupdate', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Product's group update failed")
       }
-      console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -383,7 +373,6 @@ app.post('/productgroupdelete', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Product's group delete failed")
       }
-      console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -421,8 +410,6 @@ app.get('/getproducts', jsonParser, function (req, res) {
 app.post('/getproductwithid', jsonParser, function (req, res) {
   const id = req.body.id;
 
-  console.log(id)
-  
   const querySelect = `
   SELECT 
     public.products.id,
@@ -444,7 +431,6 @@ app.post('/getproductwithid', jsonParser, function (req, res) {
   pool
     .query(querySelect, [`${id}`])
     .then(result => {
-      console.log(result.rows)
       res.send(JSON.stringify(result.rows))
     })
 });
@@ -470,7 +456,6 @@ app.post('/product', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Product already signed")
       }
-      // console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -498,7 +483,6 @@ app.post('/productupdate', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Product update failed")
       }
-      console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -524,7 +508,6 @@ app.post('/productdelete', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Product delete failed")
       }
-      console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -550,7 +533,6 @@ app.post('/payment', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Payment method already signed")
       }
-      console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -576,7 +558,6 @@ app.post('/paymentupdate', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Payment update failed")
       }
-      console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -602,7 +583,6 @@ app.post('/paymentdelete', jsonParser, function (req, res) {
       } else {
         res.status(500).send("Payment delete failed")
       }
-      console.log(result);
     })
   } else {
     res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
@@ -637,7 +617,6 @@ app.post('/sale', jsonParser, function (req, res) {
         } else {
           res.status(500).send("Sale failed")
         }
-        console.log(result);
       })
     })
   } else {
@@ -666,7 +645,6 @@ app.post('/saleupdate', jsonParser, function (req, res) {
         } else {
           res.status(500).send("Sale update failed")
         }
-        console.log(result);
       })
     })
   } else {

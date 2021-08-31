@@ -35,7 +35,6 @@ module.exports = function(address, update_date, user_id){
   return pool // CONNECTING TO THE DATABASE
     .query(queryUpdateAdmin, queryUpdateAdminValue) // SEND THE QUERY TO THE DATABASE
     .then(function SignInUser(results){ 
-        console.log(results);
         if(results.rowCount === 1){ // CHECK IF THE USER WAS UPDATED
           return(1);
         } else {

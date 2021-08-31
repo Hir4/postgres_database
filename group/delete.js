@@ -35,7 +35,6 @@ module.exports = function(update_date, delete_date, group_id){
   return pool // CONNECTING TO THE DATABASE
     .query(queryDeleteProductGroup, queryDeleteProductGroupValue) // SEND THE QUERY TO THE DATABASE
     .then(function DeleteGroup(results){ 
-        console.log(results);
         if(results.rowCount === 1){ // CHECK IF THE PRODUCT'S GROUP WAS DELETED
           return(1)
         } else {

@@ -35,7 +35,6 @@ module.exports = function(method_type, update_date, method_id){
   return pool // CONNECTING TO THE DATABASE
     .query(queryUpdatePayment, queryUpdatePaymentValue) // SEND THE QUERY TO THE DATABASE
     .then(function UpdatePayment(results){ 
-        console.log(results);
         if(results.rowCount === 1){ // CHECK IF THE PAYMENT WAS UPDATED
           return(1)
         } else {

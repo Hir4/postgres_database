@@ -33,7 +33,6 @@ module.exports = function(update_date, delete_date, method_id){
   return pool // CONNECTING TO THE DATABASE
     .query(queryDeletePayment, queryDeletePaymentValue) // SEND THE QUERY TO THE DATABASE
     .then(function DeleteUser(results){ 
-        console.log(results);
         if(results.rowCount === 1){ // CHECK IF THE PAYMENT WAS DELETE
           return(1)
         } else {
