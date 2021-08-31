@@ -42,5 +42,4 @@ module.exports = function(method_type, installments_accept, creation_date){
         }
     }) 
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 };

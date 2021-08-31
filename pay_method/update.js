@@ -43,5 +43,4 @@ module.exports = function(method_type, update_date, method_id){
         }
     }) 
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 };
