@@ -40,5 +40,4 @@ module.exports = function(update_date, delete_date, product_id){
       }
     })
     .catch(err => console.error('Error executing query', err.stack))
-    .finally(() => pool.end())
 };

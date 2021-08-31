@@ -48,5 +48,4 @@ module.exports = function (group_id, label, product_name, product_quantity, prod
       }
     })
     .catch(err => console.error('Error executing query', err.stack))
-    .finally(() => pool.end())
 };
