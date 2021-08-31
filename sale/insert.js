@@ -54,5 +54,4 @@ module.exports = function (client_id, total_bought, due_date, shipping, delivery
         }
     }) 
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 };

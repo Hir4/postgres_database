@@ -44,5 +44,4 @@ module.exports = function (sale_header_id, client_id, update_date, confirmation)
         }
     }) 
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 };
