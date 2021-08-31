@@ -43,5 +43,4 @@ module.exports = function(update_date, delete_date, group_id){
         }
     }) 
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 };

@@ -41,5 +41,4 @@ module.exports = function(product_type, creation_date){
       }
     }) 
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 };
