@@ -43,7 +43,6 @@ module.exports = function(address, update_date, user_id){
         }
     }) 
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 }
   
   

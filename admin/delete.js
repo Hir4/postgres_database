@@ -41,5 +41,4 @@ module.exports = function(update_date, delete_date, user_id){
         }
     }) 
     .catch(e => console.log(e))
-    .finally(() => pool.end())
 };
