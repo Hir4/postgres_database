@@ -516,6 +516,27 @@ app.post('/productdelete', jsonParser, function (req, res) {
 });
 
 ///////////////////////////////////////////////////////////
+// GET METHOD TO GET PAYMENT METHOD 
+//////////////////////////////////////////////////////////
+
+app.get('/paymethods', jsonParser, function (req, res) {
+  const cookie = req.cookies[`idToken`];
+  if (cookie && cookie === cookieCheckClient) {
+    const response = require('./pay_method/get.js')();
+    response.then(function (result) {
+      if (result !== undefined) {
+        res.send(result);
+      } else {
+        res.status(500).send("Payment method already signed")
+      }
+    })
+  } else {
+    res.clearCookie(`idTokenAdmin`); // CLEAR THE COOKIE
+    res.status(500).send("Something went wrong");
+  }
+});
+
+///////////////////////////////////////////////////////////
 // POST METHOD TO CREATE PAYMENT METHOD 
 //////////////////////////////////////////////////////////
 
@@ -652,5 +673,43 @@ app.post('/saleupdate', jsonParser, function (req, res) {
     res.status(500).send("Something went wrong");
   }
 });
+
+///////////////////////////////////////////////////////////
+// POST METHOD TO REPLACE VIEW SALES 
+//////////////////////////////////////////////////////////
+
+app.post('/viewsale', jsonParser, function (req, res) {
+  const cookie = req.cookies[`idToken`];
+  if (cookie && cookie === cookieCheckClient) {
+    jwt.verify(cookie, secretKeyJWT, function (err, decoded) {
+      const client_id = decoded.id;
+
+      const response = require('./views/replace.js')(client_id);
+      response.then(function () {
+        res.send("View sale created with success");
+      })
+    })
+  } else {
+    res.clearCookie(`idToken`); // CLEAR THE COOKIE
+    res.status(500).send("Something went wrong");
+  }
+})
+
+///////////////////////////////////////////////////////////
+// GET METHOD TO VIEW SALES 
+//////////////////////////////////////////////////////////
+
+app.get('/viewsale', jsonParser, function (req, res) {
+  const cookie = req.cookies[`idToken`];
+  if (cookie && cookie === cookieCheckClient) {
+    const response = require('./views/select.js')();
+    response.then(function (results) {
+      res.send(results)
+    })
+  } else {
+    res.clearCookie(`idToken`); // CLEAR THE COOKIE
+    res.status(500).send("Something went wrong");
+  }
+})
 
 app.listen(8080);
