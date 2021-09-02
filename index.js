@@ -712,4 +712,26 @@ app.get('/viewsale', jsonParser, function (req, res) {
   }
 })
 
+///////////////////////////////////////////////////////////
+// GET METHOD TO CLIENT INFO 
+//////////////////////////////////////////////////////////
+
+app.post('/getclientinfo', jsonParser, function (req, res) {
+  const cookie = req.cookies[`idToken`];
+  jwt.verify(cookie, secretKeyJWT, function (err, decoded) {
+    const client_id = decoded.id;
+
+    if (cookie && cookie === cookieCheckClient) {
+      const response = require('./clients/select.js')(client_id);
+      response.then(function (results) {
+        res.send(results)
+        console.log(results)
+      })
+    } else {
+      res.clearCookie(`idToken`); // CLEAR THE COOKIE
+      res.status(500).send("Something went wrong");
+    }
+  })
+})
+
 app.listen(8080);
