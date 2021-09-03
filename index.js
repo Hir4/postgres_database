@@ -735,4 +735,17 @@ app.post('/getclientinfo', jsonParser, function (req, res) {
   })
 })
 
+///////////////////////////////////////////////////////////
+// POST METHOD TO SEARCH PRODUCT 
+//////////////////////////////////////////////////////////
+
+app.post('/searchproduct', jsonParser, function (req, res) {
+    const search = req.body.search;
+
+      const response = require('./products/search.js')(search);
+      response.then(function (results) {
+        res.send(results)
+      })
+})
+
 app.listen(8080);
