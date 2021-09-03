@@ -17,11 +17,11 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL
 });
 
-module.exports = function (group_id, update_date, product_id) {
+module.exports = function (img_path, update_date, product_id) {
   const queryUpdateProduct = `
   UPDATE public.products
   SET
-    group_id = $1,
+    img_path = $1,
     update_date = $2
   WHERE 
     id = $3 
@@ -29,7 +29,7 @@ module.exports = function (group_id, update_date, product_id) {
     delete_date::timestamp is  null
   `;
 
-  const queryUpdateProductValue = [`${group_id}`, `${update_date}`, `${product_id}`];
+  const queryUpdateProductValue = [`${img_path}`, `${update_date}`, `${product_id}`];
 
   return pool
     .query(queryUpdateProduct, queryUpdateProductValue)

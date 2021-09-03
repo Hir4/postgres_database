@@ -23,6 +23,7 @@ module.exports = function (client_id) {
         client_id, 
         first_name,
         product_name,
+        img_path,
         sale.creation_date, 
         total_bought, 
         payment.method_type

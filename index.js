@@ -390,6 +390,7 @@ app.get('/getproducts', jsonParser, function (req, res) {
     id,
 	  label, 
     product_name,
+    img_path,
     product_price,
     product_quantity
   FROM 
@@ -415,6 +416,7 @@ app.post('/getproductwithid', jsonParser, function (req, res) {
     public.products.id,
 	  label, 
     product_name,
+    img_path,
     product_price,
     product_quantity,
     product_type
@@ -472,10 +474,10 @@ app.post('/productupdate', jsonParser, function (req, res) {
   const cookie = req.cookies[`idTokenAdmin`];
   if (cookie && cookie === cookieCheckAdmin) {
     const product_id = req.body.product_id;
-    const group_id = req.body.group_id; // THE ROW YOU WANT TO CHANGE
+    const img_path = req.body.img_path; // THE ROW YOU WANT TO CHANGE
     const update_date = req.body.update_date;
 
-    const response = require('./products/update.js')(group_id, update_date, product_id);
+    const response = require('./products/update.js')(img_path, update_date, product_id);
 
     response.then(function (result) {
       if (result === 1) {
@@ -725,7 +727,6 @@ app.post('/getclientinfo', jsonParser, function (req, res) {
       const response = require('./clients/select.js')(client_id);
       response.then(function (results) {
         res.send(results)
-        console.log(results)
       })
     } else {
       res.clearCookie(`idToken`); // CLEAR THE COOKIE
