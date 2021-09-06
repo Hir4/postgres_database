@@ -145,7 +145,7 @@ app.post('/adminupdate', jsonParser, function (req, res) {
 // POST METHOD TO DELETE ADMIN 
 //////////////////////////////////////////////////////////
 
-app.post('/admindelete', jsonParser, function (req, res) {
+app.delete('/admindelete', jsonParser, function (req, res) {
   const cookie = req.cookies[`idTokenAdmin`];
   if (cookie && cookie === cookieCheckAdmin) {
     jwt.verify(cookie, secretKeyJWTAdmin, function (err, decoded) {
@@ -283,7 +283,7 @@ app.post('/userupdate', jsonParser, function (req, res) {
 // POST METHOD TO DELETE USER 
 //////////////////////////////////////////////////////////
 
-app.post('/userdelete', jsonParser, function (req, res) {
+app.delete('/userdelete', jsonParser, function (req, res) {
   const cookie = req.cookies[`idToken`];
   if (cookie && cookie === cookieCheckClient) {
     jwt.verify(cookie, secretKeyJWT, function (err, decoded) {
@@ -359,7 +359,7 @@ app.post('/productgroupupdate', jsonParser, function (req, res) {
 // POST METHOD TO DELETE PRODUCT'S GROUP
 //////////////////////////////////////////////////////////
 
-app.post('/productgroupdelete', jsonParser, function (req, res) {
+app.delete('/productgroupdelete', jsonParser, function (req, res) {
   const cookie = req.cookies[`idTokenAdmin`];
   if (cookie && cookie === cookieCheckAdmin) {
     const group_id = req.body.group_id;
@@ -496,7 +496,7 @@ app.post('/productupdate', jsonParser, function (req, res) {
 // POST METHOD TO DELETE PRODUCT 
 //////////////////////////////////////////////////////////
 
-app.post('/productdelete', jsonParser, function (req, res) {
+app.delete('/productdelete', jsonParser, function (req, res) {
   const cookie = req.cookies[`idTokenAdmin`];
   if (cookie && cookie === cookieCheckAdmin) {
     const product_id = req.body.product_id;
@@ -592,7 +592,7 @@ app.post('/paymentupdate', jsonParser, function (req, res) {
 // POST METHOD TO DELETE PAYMENT 
 //////////////////////////////////////////////////////////
 
-app.post('/paymentdelete', jsonParser, function (req, res) {
+app.delete('/paymentdelete', jsonParser, function (req, res) {
   const cookie = req.cookies[`idTokenAdmin`];
   if (cookie && cookie === cookieCheckAdmin) {
     const method_id = req.body.method_id;
